@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable-anydpi/exit_to_account_toolbar.xml" value="0.227" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable-anydpi/search_toolbar.xml" value="0.227" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable-v24/messages_send.xml" value="0.124" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.227" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable/ic_baseline_add_circle_24.xml" value="0.227" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable/ic_launcher_background.xml" value="0.227" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable/item_search_background.xml" value="0.227" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable/search.xml" value="0.227" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/fragment_login.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/item_messages_layout.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/item_search.xml" value="0.4" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/messages.xml" value="0.1721311475409836" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/messages_layout.xml" value="0.1721311475409836" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/messages_send_layout.xml" value="0.1721311475409836" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/registration.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/search_layout.xml" value="0.4957472660996355" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/toolbar.xml" value="0.264" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/menu/menu_main_activity.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.227" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

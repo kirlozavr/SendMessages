@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">SendMessages</string>
+    <string name="edit_text_name">Введите никнейм</string>
+    <string name="edit_text_password">Введите пароль</string>
+    <string name="edit_text_messages">Введите текст</string>
+    <string name="buttonRegistration_true">Зарегистрироваться</string>
+    <string name="buttonRegistration_false">Войти</string>
+    <string name="textViewRegistration_true">Уже зарегистрированны?</string>
+    <string name="textViewRegistration_false">Еще не зарегистрирован?</string>
+    <string name="Toast_name">Вы не ввели никнейм</string>
+    <string name="Toast_password">Вы не ввели пароль</string>
+    <string name="Toast_error">Ошибка</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+</resources>

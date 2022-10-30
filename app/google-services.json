@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "948970251995",
+    "firebase_url": "https://sendmessages-1b48d-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "sendmessages-1b48d",
+    "storage_bucket": "sendmessages-1b48d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948970251995:android:5155ab65ffc4feb2e08efe",
+        "android_client_info": {
+          "package_name": "com.example.sendmessages"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "948970251995-3o7qr106cvmqttvikbd9cgo150em1fpe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCA6_jGmwu55jbxLcdZ9raXPxweOghjY28"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "948970251995-3o7qr106cvmqttvikbd9cgo150em1fpe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
