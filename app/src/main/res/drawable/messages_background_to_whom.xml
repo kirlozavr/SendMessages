@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="@color/messages_background"/>
+            <solid android:color="@color/messages_background_to_whom"/>
             <corners android:radius="14dp" />
         </shape>
     </item>

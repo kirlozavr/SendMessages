@@ -1,6 +1,7 @@
 package com.example.sendmessages.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,8 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sendmessages.Entity.UserEntity;
+import com.example.sendmessages.General.DataBase;
 import com.example.sendmessages.R;
-import com.example.sendmessages.Adapters.RegistrationAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,7 +36,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    private static final String NAME_DB = "User";
     private String no_username = "Пользователь с таким именем уже существует";
     private String no_password = "";
     private boolean registration_bool = true;
@@ -43,6 +44,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText editTextNumberPassword;
     private Button buttonRegistration;
     private FirebaseFirestore db;
+    private SharedPreferences settings;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         buttonRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view){
                 /** Проверяем поля editTextName и editTextPassword на введенные значения **/
                 if (editTextName.getText().toString().trim().equals("")) {
                     Toast.makeText(RegistrationActivity.this, R.string.Toast_name, Toast.LENGTH_LONG).show();
@@ -99,27 +101,30 @@ public class RegistrationActivity extends AppCompatActivity {
             editTextNumberPassword = findViewById(R.id.editTextNumberPassword);
             buttonRegistration = findViewById(R.id.buttonRegistration);
             db = FirebaseFirestore.getInstance();
+            settings = getSharedPreferences(DataBase.SettingsTag.SETTINGS_TAG, MODE_PRIVATE);
         } catch (Exception e) {
             Log.i("Ошибка", "Ошибка initialization Registration: " + e.getMessage());
         }
     }
 
-    private void runSearchUserForRegistrationOrInput() {
+    private void runSearchUserForRegistrationOrInput(){
         /** Обращаемся к нашей бд, к папке NAME_DB, ко всем полям username на наличие по имени введенным пользователем **/
-        db.collection(NAME_DB)
+        db.collection(DataBase.NAME_DB)
                 .whereEqualTo("username", editTextName.getText().toString().trim())
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         /** Проверяем, существуют ли пользователь в папке NAME_DB**/
+                        Log.i("папа", String.valueOf(task.getResult().isEmpty()));
                         if (!task.getResult().isEmpty()) {
                             for (QueryDocumentSnapshot ds : task.getResult()) {
-                                RegistrationAdapter registrationAdapter = ds.toObject(RegistrationAdapter.class);
+                                UserEntity userEntity = ds.toObject(UserEntity.class);
                                 /** Если пользователь хочет войти **/
                                 if (!registration_bool) {
                                     /** Проверяем соответсвие пароля и в случае успеха осуществляем вход **/
                                     if (editTextNumberPassword.getText().toString().trim()
-                                            .equals(registrationAdapter.getPassword())) {
+                                            .equals(userEntity.getPassword())) {
                                         runStartActivity();
                                         break;
                                     }
@@ -155,29 +160,35 @@ public class RegistrationActivity extends AppCompatActivity {
     private void runStartActivity() {
         /** Запуск MainActivity и закрытие нынещнего активити **/
         Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
-        intent.putExtra("name", editTextName.getText().toString().trim());
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(DataBase.SettingsTag.USER_NAME_TAG, editTextName.getText().toString().trim());
+        editor.apply();
         startActivity(intent);
         finish();
     }
 
     private void sendRegistration() {
         /** Запись всех значений в переменные и регистрация нового пользователя **/
-        int id = (int) (Math.random() * 10000000);
-        String username = editTextName.getText().toString().trim();
-        String password = editTextNumberPassword.getText().toString().trim();
-        RegistrationAdapter registrationAdapter = new RegistrationAdapter(id, username, password);
-        db.collection(NAME_DB).add(registrationAdapter)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.i("Отправка", "Данные успешно отправленны " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.i("Ошибка", "Registration/sendRegistration " + e.getMessage());
-                    }
-                });
+        try {
+            int id = (int) (Math.random() * 10000000);
+            String username = editTextName.getText().toString().trim();
+            String password = editTextNumberPassword.getText().toString().trim();
+            UserEntity userEntity = new UserEntity(id, username, password);
+            db.collection(DataBase.NAME_DB).add(userEntity)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.i("Отправка", "Данные успешно отправленны " + documentReference.getId());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.i("Ошибка", "Registration/sendRegistration " + e.getMessage());
+                        }
+                    });
+        }catch (Exception e){
+
+        }
     }
 }

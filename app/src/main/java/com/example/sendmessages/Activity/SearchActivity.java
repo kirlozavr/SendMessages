@@ -1,5 +1,6 @@
 package com.example.sendmessages.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sendmessages.Adapters.RecycleViewAdapterSearch;
+import com.example.sendmessages.General.DataBase;
+import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.Items.RecycleViewItemSearch;
 import com.example.sendmessages.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,7 +43,16 @@ public class SearchActivity extends AppCompatActivity {
         searchView = findViewById(R.id.searchView);
         searchView.setIconifiedByDefault(false);
         recyclerView = findViewById(R.id.recycleViewSearchView);
-        adapterSearch = new RecycleViewAdapterSearch(SearchActivity.this);
+
+        OnClickListener<RecycleViewItemSearch> onClickListener =
+                new OnClickListener<RecycleViewItemSearch>() {
+                    @Override
+                    public void onClick(RecycleViewItemSearch entity, int position) {
+                        runStartActivity(entity.getUsername());
+                    }
+                };
+
+        adapterSearch = new RecycleViewAdapterSearch(SearchActivity.this, onClickListener);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -69,7 +81,7 @@ public class SearchActivity extends AppCompatActivity {
 
         List<RecycleViewItemSearch> list = new ArrayList<RecycleViewItemSearch>();
 
-        firestore.collection(MainActivity.NAME_DB)
+        firestore.collection(DataBase.NAME_DB)
                 .whereGreaterThanOrEqualTo("username", username)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -85,4 +97,12 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private void runStartActivity(String username){
+        Intent intent = new Intent(SearchActivity.this, MessagesSendActivity.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
+        finish();
+    }
+
 }

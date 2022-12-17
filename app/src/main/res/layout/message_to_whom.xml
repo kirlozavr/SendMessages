@@ -3,14 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/messages_send"
+    android:layout_marginRight="20dp"
+    android:layout_marginBottom="4dp"
+    android:background="@drawable/messages_background_to_whom"
     android:orientation="horizontal"
     tools:ignore="MissingConstraints"
     tools:layout_editor_absoluteX="1dp"
     tools:layout_editor_absoluteY="1dp">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textToWhom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="6dp"
@@ -20,7 +22,7 @@
         android:textSize="16dp" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/timeTextToWhom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

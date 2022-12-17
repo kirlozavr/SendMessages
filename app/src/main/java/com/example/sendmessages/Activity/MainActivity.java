@@ -2,10 +2,10 @@ package com.example.sendmessages.Activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,15 +13,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.sendmessages.General.DataBase;
 import com.example.sendmessages.R;
 
 public class MainActivity extends AppCompatActivity{
 
     private RecyclerView recycleViewMain;
     private Toolbar toolbar;
-    private String name_user;
-    public static final String NAME_DB = "User";
-    public static final String MESSAGES = "Messages";
+    private String username;
+    private SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity{
                 startActivity(intent);
             }
             case R.id.exit:{
-                Toast.makeText(MainActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
                 break;
             }
         }
@@ -61,10 +60,15 @@ public class MainActivity extends AppCompatActivity{
         recycleViewMain = findViewById(R.id.RecycleViewMain);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        name_user = getIntent().getStringExtra("name");
-        getSupportActionBar().setTitle("Добро пожаловать "
-                + name_user.substring(0,1).toUpperCase()
-                + name_user.substring(1));
+        settings = getSharedPreferences(DataBase.SettingsTag.SETTINGS_TAG, MODE_PRIVATE);
+        if(settings.contains(DataBase.SettingsTag.USER_NAME_TAG)){
+            username = settings.getString(DataBase.SettingsTag.USER_NAME_TAG, "");
+        }
+        getSupportActionBar().setTitle(
+                "Добро пожаловать " +
+                username.substring(0,1).toUpperCase() +
+                username.substring(1)
+        );
     }
 
     private void getDataMessages(){
