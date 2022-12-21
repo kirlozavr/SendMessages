@@ -1,15 +1,15 @@
-package com.example.sendmessages.Items;
+package com.example.sendmessages.DTO;
 
-public class RecycleViewItemSearch {
+public class SearchDto {
 
     private String username;
     private int userId;
 
-    public RecycleViewItemSearch(String username, int userId) {
+    public SearchDto(String username, int userId) {
         this.username = username;
         this.userId = userId;
     }
-    public RecycleViewItemSearch(){}
+    public SearchDto(){}
 
     public String getUsername() {
         return username;
