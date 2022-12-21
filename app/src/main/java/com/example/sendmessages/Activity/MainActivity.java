@@ -63,11 +63,13 @@ public class MainActivity extends AppCompatActivity {
             case R.id.search_user: {
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 startActivity(intent);
+                break;
             }
             case R.id.exit: {
                 Intent intent = new Intent(MainActivity.this, RegistrationActivity.class);
                 startActivity(intent);
                 finish();
+                break;
             }
         }
         return super.onOptionsItemSelected(item);
