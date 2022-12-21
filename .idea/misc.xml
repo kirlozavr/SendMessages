@@ -5,18 +5,25 @@
       <map>
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable-anydpi/exit_to_account_toolbar.xml" value="0.227" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable-anydpi/search_toolbar.xml" value="0.227" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.124" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable-v24/messages_background_from.xml" value="0.124" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable-v24/messages_send.xml" value="0.124" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable/chats_background.xml" value="0.227" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.227" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable/ic_baseline_add_circle_24.xml" value="0.227" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable/ic_launcher_background.xml" value="0.227" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable/item_search_background.xml" value="0.227" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable/messages_background_to_whom.xml" value="0.124" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable/messages_bakground_to_whom.xml" value="0.227" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/drawable/search.xml" value="0.227" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/fragment_login.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/item_chat.xml" value="0.18478260869565216" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/item_message_from.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/item_message_to_whom.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/item_messages_layout.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/item_search.xml" value="0.4" />
-        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/message_from.xml" value="0.6" />
+        <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/message_from.xml" value="0.4" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/message_to_whom.xml" value="0.2" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/messages.xml" value="0.1721311475409836" />
         <entry key="..\:/Users/kirlo/AndroidStudioProjects/SendMessages/app/src/main/res/layout/messages_layout.xml" value="0.1721311475409836" />

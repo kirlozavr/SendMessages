@@ -17,20 +17,21 @@ import com.example.sendmessages.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecycleViewAdapterSearch extends RecyclerView.Adapter<RecycleViewAdapterSearch.RecycleHolderSearch> {
+public class RecyclerViewAdapterSearch extends RecyclerView.Adapter<RecyclerViewAdapterSearch.RecycleHolderSearch> {
 
     private final OnClickListener<RecycleViewItemSearch> onClickListener;
     private List<RecycleViewItemSearch> searchList = new ArrayList<RecycleViewItemSearch>();
     private LayoutInflater layoutInflater;
 
-    public RecycleViewAdapterSearch(
+    public RecyclerViewAdapterSearch(
             Context context,
-            OnClickListener<RecycleViewItemSearch> onClickListener) {
+            OnClickListener<RecycleViewItemSearch> onClickListener
+    ) {
         this.onClickListener = onClickListener;
         this.layoutInflater = LayoutInflater.from(context);
     }
 
-    public void setSearchList(List<RecycleViewItemSearch> searchList) {
+    public void setList(List<RecycleViewItemSearch> searchList) {
         this.searchList = searchList;
         notifyDataSetChanged();
     }
@@ -42,7 +43,7 @@ public class RecycleViewAdapterSearch extends RecyclerView.Adapter<RecycleViewAd
 
     @NonNull
     @Override
-    public RecycleViewAdapterSearch.RecycleHolderSearch onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerViewAdapterSearch.RecycleHolderSearch onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.item_search, parent, false);
@@ -51,7 +52,7 @@ public class RecycleViewAdapterSearch extends RecyclerView.Adapter<RecycleViewAd
 
     @Override
     public void onBindViewHolder(
-            @NonNull RecycleViewAdapterSearch.RecycleHolderSearch holder,
+            @NonNull RecyclerViewAdapterSearch.RecycleHolderSearch holder,
             @SuppressLint("RecyclerView") int position
     ) {
         RecycleViewItemSearch recycleViewItemSearch = searchList.get(position);

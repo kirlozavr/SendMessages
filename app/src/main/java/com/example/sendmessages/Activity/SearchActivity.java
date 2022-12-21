@@ -10,7 +10,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.sendmessages.Adapters.RecycleViewAdapterSearch;
+import com.example.sendmessages.Adapters.RecyclerViewAdapterSearch;
 import com.example.sendmessages.General.DataBase;
 import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.Items.RecycleViewItemSearch;
@@ -27,9 +27,9 @@ import java.util.List;
 public class SearchActivity extends AppCompatActivity {
 
     private SearchView searchView;
-    private RecyclerView recyclerView;
     private FirebaseFirestore firestore;
-    private RecycleViewAdapterSearch adapterSearch;
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapterSearch adapterSearch;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,22 +42,6 @@ public class SearchActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
         searchView = findViewById(R.id.searchView);
         searchView.setIconifiedByDefault(false);
-        recyclerView = findViewById(R.id.recycleViewSearchView);
-
-        OnClickListener<RecycleViewItemSearch> onClickListener =
-                new OnClickListener<RecycleViewItemSearch>() {
-                    @Override
-                    public void onClick(RecycleViewItemSearch entity, int position) {
-                        runStartActivity(entity.getUsername());
-                    }
-                };
-
-        adapterSearch = new RecycleViewAdapterSearch(SearchActivity.this, onClickListener);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapterSearch);
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -75,24 +59,44 @@ public class SearchActivity extends AppCompatActivity {
                 return false;
             }
         });
+        initRecycler();
+    }
+
+    private void initRecycler(){
+        OnClickListener<RecycleViewItemSearch> onClickListener =
+                new OnClickListener<RecycleViewItemSearch>() {
+                    @Override
+                    public void onClick(RecycleViewItemSearch entity, int position) {
+                        runStartActivity(entity.getUsername());
+                    }
+                };
+        recyclerView = findViewById(R.id.recycleViewSearchView);
+        adapterSearch = new RecyclerViewAdapterSearch(SearchActivity.this, onClickListener);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapterSearch);
     }
 
     private void search(String username) {
 
         List<RecycleViewItemSearch> list = new ArrayList<RecycleViewItemSearch>();
 
-        firestore.collection(DataBase.NAME_DB)
+        firestore
+                .collection(DataBase.NAME_DB)
                 .whereGreaterThanOrEqualTo("username", username)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         for (QueryDocumentSnapshot ds : task.getResult()) {
                             RecycleViewItemSearch recycleViewItemSearch = new RecycleViewItemSearch(
                                     ds.toObject(RecycleViewItemSearch.class).getUsername()
-                                    , ds.toObject(RecycleViewItemSearch.class).getUserId());
+                                    , ds.toObject(RecycleViewItemSearch.class).getUserId()
+                            );
                             list.add(recycleViewItemSearch);
                         }
-                        adapterSearch.setSearchList(list);
+                        adapterSearch.setList(list);
 
                     }
                 });

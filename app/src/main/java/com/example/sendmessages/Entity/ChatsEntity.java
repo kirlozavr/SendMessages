@@ -2,35 +2,38 @@ package com.example.sendmessages.Entity;
 
 public class ChatsEntity {
     private Integer idChats;
-    private String usernameFrom, usernameToWhom;
+    private String usernameToWhom, lastMessage;
 
     public ChatsEntity() {
 
     }
 
-
-    public ChatsEntity(Integer idChats, String usernameFrom, String usernameToWhom) {
+    public ChatsEntity(Integer idChats, String usernameToWhom) {
         this.idChats = idChats;
-        this.usernameFrom = usernameFrom;
         this.usernameToWhom = usernameToWhom;
     }
 
-    public ChatsEntity(String usernameFrom, String usernameToWhom) {
+    public ChatsEntity(String usernameToWhom) {
         this.idChats = (int)((Math.random() * 10000000));
-        this.usernameFrom = usernameFrom;
         this.usernameToWhom = usernameToWhom;
+    }
+
+    public ChatsEntity(Integer idChats, String usernameToWhom, String lastMessage) {
+        this.idChats = idChats;
+        this.usernameToWhom = usernameToWhom;
+        this.lastMessage = lastMessage;
     }
 
     public Integer getIdChats() {
         return idChats;
     }
 
-    public String getUsernameFrom() {
-        return usernameFrom;
+    public String getLastMessage() {
+        return lastMessage;
     }
 
-    public void setUsernameFrom(String usernameFrom) {
-        this.usernameFrom = usernameFrom;
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
     }
 
     public String getUsernameToWhom() {

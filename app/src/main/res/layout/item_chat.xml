@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayoutItemMessages"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/linearLayoutItemMessages">
+    android:background="@drawable/chats_background"
+    android:layout_margin="6dp"
+    android:elevation="4dp">
 
 
     <TextView
-        android:id="@+id/textViewNameMessages"
+        android:id="@+id/textChatsName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginVertical="20dp"
         android:layout_marginRight="24dp"
-        android:layout_marginBottom="16dp"
         android:layout_weight="1"
         android:fontFamily="@font/roboto_medium"
-        android:textSize="16dp" />
+        android:textColor="@color/black"
+        android:textSize="20dp" />
 
     <TextView
-        android:id="@+id/textViewMessages"
+        android:id="@+id/textLastMessages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginVertical="20dp"
         android:layout_weight="4"
         android:fontFamily="@font/roboto_medium"
         android:textSize="16dp" />

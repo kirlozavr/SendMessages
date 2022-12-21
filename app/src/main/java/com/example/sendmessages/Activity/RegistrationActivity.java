@@ -36,9 +36,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    private String no_username = "Пользователь с таким именем уже существует";
+    private String no_username = "Пользователь с таким именем не найден";
     private String no_password = "";
-    private boolean registration_bool = true;
+    private boolean registration_bool = false;
     private TextView textViewRegistration;
     private EditText editTextName;
     private EditText editTextNumberPassword;
@@ -70,21 +70,9 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    /** Пользователь нажал на textViewRegistration, начинается проверка:
-                     * если пользователь зарегистрирован, поменять текст buttonRegistration и textViewRegistration **/
-                    if (registration_bool) {
-                        registration_bool = false;
-                        buttonRegistration.setText(R.string.buttonRegistration_false);
-                        textViewRegistration.setText(R.string.textViewRegistration_false);
-                        no_username = "Пользователь с таким именем не найден";
-                        no_password = "Пароль неверный";
-                    } else {
-                        /** если пользователь не зарегистрирован, поменять текст buttonRegistration и textViewRegistration **/
-                        registration_bool = true;
-                        buttonRegistration.setText(R.string.buttonRegistration_true);
-                        textViewRegistration.setText(R.string.textViewRegistration_true);
-                        no_username = "Пользователь с таким именем уже существует";
-                    }
+                    /** Пользователь нажал на textViewRegistration, начинается проверка: **/
+
+                    buttonStatus();
                 } catch (Exception e) {
                     Log.i("Ошибка", "Ошибка textViewRegistration: " + e.getMessage());
                 }
@@ -100,10 +88,29 @@ public class RegistrationActivity extends AppCompatActivity {
             editTextName = findViewById(R.id.editTextName);
             editTextNumberPassword = findViewById(R.id.editTextNumberPassword);
             buttonRegistration = findViewById(R.id.buttonRegistration);
+            buttonRegistration.setText(R.string.buttonRegistration_false);
+            textViewRegistration.setText(R.string.textViewRegistration_false);
             db = FirebaseFirestore.getInstance();
             settings = getSharedPreferences(DataBase.SettingsTag.SETTINGS_TAG, MODE_PRIVATE);
         } catch (Exception e) {
             Log.i("Ошибка", "Ошибка initialization Registration: " + e.getMessage());
+        }
+    }
+
+    private void buttonStatus(){
+        if (registration_bool) {
+            /** если пользователь зарегистрирован, поменять текст buttonRegistration и textViewRegistration **/
+            registration_bool = false;
+            buttonRegistration.setText(R.string.buttonRegistration_false);
+            textViewRegistration.setText(R.string.textViewRegistration_false);
+            no_username = "Пользователь с таким именем не найден";
+            no_password = "Пароль неверный";
+        } else {
+            /** если пользователь не зарегистрирован, поменять текст buttonRegistration и textViewRegistration **/
+            registration_bool = true;
+            buttonRegistration.setText(R.string.buttonRegistration_true);
+            textViewRegistration.setText(R.string.textViewRegistration_true);
+            no_username = "Пользователь с таким именем уже существует";
         }
     }
 
