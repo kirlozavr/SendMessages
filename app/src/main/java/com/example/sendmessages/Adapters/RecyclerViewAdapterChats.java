@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.sendmessages.Entity.ChatsEntity;
+import com.example.sendmessages.DTO.ChatsDto;
 import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.R;
 
@@ -20,18 +20,18 @@ import java.util.List;
 public class RecyclerViewAdapterChats extends RecyclerView.Adapter<RecyclerViewAdapterChats.RecyclerViewHolder> {
 
     private LayoutInflater inflater;
-    private List<ChatsEntity> chatsList = new ArrayList<ChatsEntity>();
-    private OnClickListener<ChatsEntity> onClickListener;
+    private List<ChatsDto> chatsList = new ArrayList<ChatsDto>();
+    private OnClickListener<ChatsDto> onClickListener;
 
     public RecyclerViewAdapterChats(
             Context context,
-            OnClickListener<ChatsEntity> onClickListener
+            OnClickListener<ChatsDto> onClickListener
     ) {
         this.onClickListener = onClickListener;
         this.inflater = LayoutInflater.from(context);
     }
 
-    public void setList(List<ChatsEntity> chatsList){
+    public void setList(List<ChatsDto> chatsList){
         this.chatsList = chatsList;
         notifyDataSetChanged();
     }
@@ -57,14 +57,14 @@ public class RecyclerViewAdapterChats extends RecyclerView.Adapter<RecyclerViewA
             @NonNull RecyclerViewHolder holder,
             @SuppressLint("RecyclerView") int position
     ) {
-        ChatsEntity chatsEntity = chatsList.get(position);
-        holder.textChatsName.setText(chatsEntity.getUsernameToWhom());
-        holder.textLastMessages.setText(chatsEntity.getLastMessage());
+        ChatsDto chatsDto = chatsList.get(position);
+        holder.textChatsName.setText(chatsDto.getUsernameToWhom());
+        holder.textLastMessages.setText(chatsDto.getLastMessage());
         holder.itemView.setOnClickListener(
                 new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onClickListener.onClick(chatsEntity, position);
+                onClickListener.onClick(chatsDto, position);
             }
         });
     }

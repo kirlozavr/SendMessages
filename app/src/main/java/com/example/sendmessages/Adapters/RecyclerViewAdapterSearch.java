@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sendmessages.Interface.OnClickListener;
-import com.example.sendmessages.Items.RecycleViewItemSearch;
+import com.example.sendmessages.DTO.SearchDto;
 import com.example.sendmessages.R;
 
 import java.util.ArrayList;
@@ -19,19 +19,19 @@ import java.util.List;
 
 public class RecyclerViewAdapterSearch extends RecyclerView.Adapter<RecyclerViewAdapterSearch.RecycleHolderSearch> {
 
-    private final OnClickListener<RecycleViewItemSearch> onClickListener;
-    private List<RecycleViewItemSearch> searchList = new ArrayList<RecycleViewItemSearch>();
+    private final OnClickListener<SearchDto> onClickListener;
+    private List<SearchDto> searchList = new ArrayList<SearchDto>();
     private LayoutInflater layoutInflater;
 
     public RecyclerViewAdapterSearch(
             Context context,
-            OnClickListener<RecycleViewItemSearch> onClickListener
+            OnClickListener<SearchDto> onClickListener
     ) {
         this.onClickListener = onClickListener;
         this.layoutInflater = LayoutInflater.from(context);
     }
 
-    public void setList(List<RecycleViewItemSearch> searchList) {
+    public void setList(List<SearchDto> searchList) {
         this.searchList = searchList;
         notifyDataSetChanged();
     }
@@ -55,14 +55,13 @@ public class RecyclerViewAdapterSearch extends RecyclerView.Adapter<RecyclerView
             @NonNull RecyclerViewAdapterSearch.RecycleHolderSearch holder,
             @SuppressLint("RecyclerView") int position
     ) {
-        RecycleViewItemSearch recycleViewItemSearch = searchList.get(position);
-        holder.textViewSearch.setText(recycleViewItemSearch.getUsername());
-        holder.userId = recycleViewItemSearch.getUserId();
+        SearchDto searchDto = searchList.get(position);
+        holder.textViewSearch.setText(searchDto.getUsername());
         holder.itemView.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onClickListener.onClick(recycleViewItemSearch, position);
+                        onClickListener.onClick(searchDto, position);
                     }
                 }
         );
@@ -76,7 +75,6 @@ public class RecyclerViewAdapterSearch extends RecyclerView.Adapter<RecyclerView
     public class RecycleHolderSearch extends RecyclerView.ViewHolder {
 
         private TextView textViewSearch;
-        private int userId;
 
         public RecycleHolderSearch(@NonNull View itemView) {
             super(itemView);

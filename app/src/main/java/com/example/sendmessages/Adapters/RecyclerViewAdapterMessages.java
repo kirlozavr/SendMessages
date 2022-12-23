@@ -2,7 +2,6 @@ package com.example.sendmessages.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.sendmessages.Entity.MessageEntity;
+import com.example.sendmessages.DTO.MessageDto;
 import com.example.sendmessages.R;
 
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import java.util.List;
 
 public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<MessageEntity> messageList = new ArrayList<MessageEntity>();
+    private List<MessageDto> messageList = new ArrayList<MessageDto>();
     private LayoutInflater layoutInflater;
     private final String usernameFrom;
     private final int TYPE_FROM = 0;
@@ -30,7 +29,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
         this.layoutInflater = LayoutInflater.from(context);
     }
 
-    public void setList(List<MessageEntity> messageList){
+    public void setList(List<MessageDto> messageList){
         this.messageList = messageList;
         notifyDataSetChanged();
     }
@@ -42,10 +41,8 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        MessageEntity messageEntity = messageList.get(position);
-        Log.i("смотр", messageEntity.getUsernameFrom());
-        Log.i("смотр", String.valueOf(messageEntity.getUsernameFrom().equals(usernameFrom)));
-        if(messageEntity.getUsernameFrom().equals(usernameFrom)){
+        MessageDto message = messageList.get(position);
+        if(message.getUsernameFrom().equals(usernameFrom)){
             return TYPE_FROM;
         } else {
             return TYPE_TO_WHOM;
@@ -95,22 +92,22 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
             @NonNull RecycleHolderMessageFrom holder,
             int position
     ){
-        MessageEntity messageEntity = messageList.get(position);
+        MessageDto message = messageList.get(position);
         holder.textFrom
-                .setText(messageEntity.getMessage());
+                .setText(message.getMessage());
         holder.timeFrom
-                .setText(messageEntity.getDateTimeToMessages()
+                .setText(message.getDateTimeToMessages()
                 );
     }
 
     private void messageToWhom(@NonNull RecycleHolderMessageToWhom holder,
                                int position
     ){
-        MessageEntity messageEntity = messageList.get(position);
+        MessageDto message = messageList.get(position);
         holder.textToWhom
-                .setText(messageEntity.getMessage());
+                .setText(message.getMessage());
         holder.timeToWhom
-                .setText(messageEntity.getDateTimeToMessages()
+                .setText(message.getDateTimeToMessages()
                 );
     }
 
