@@ -13,13 +13,6 @@ public class UserEntity {
         this.password = password;
     }
 
-    public UserEntity getUser(UserEntity userEntity){
-        return new UserEntity(
-                userEntity.id,
-                userEntity.username,
-                userEntity.password);
-    }
-
     public int getId() {
         return id;
     }
