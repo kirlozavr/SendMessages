@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sendmessages.Adapters.RecyclerViewAdapterSearch;
+import com.example.sendmessages.DTO.SearchDto;
+import com.example.sendmessages.Entity.UserEntity;
 import com.example.sendmessages.General.DataBase;
 import com.example.sendmessages.Interface.OnClickListener;
-import com.example.sendmessages.Items.RecycleViewItemSearch;
+import com.example.sendmessages.Mapping.SearchMapper;
 import com.example.sendmessages.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,6 +30,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private SearchView searchView;
     private FirebaseFirestore firestore;
+    private SearchMapper mapper = new SearchMapper();
     private RecyclerView recyclerView;
     private RecyclerViewAdapterSearch adapterSearch;
 
@@ -51,7 +54,7 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText.length() == 0 || newText.isEmpty()){
+                if (newText.length() == 0 || newText.isEmpty()) {
                     adapterSearch.deleteList();
                 } else {
                     search(newText);
@@ -62,11 +65,11 @@ public class SearchActivity extends AppCompatActivity {
         initRecycler();
     }
 
-    private void initRecycler(){
-        OnClickListener<RecycleViewItemSearch> onClickListener =
-                new OnClickListener<RecycleViewItemSearch>() {
+    private void initRecycler() {
+        OnClickListener<SearchDto> onClickListener =
+                new OnClickListener<SearchDto>() {
                     @Override
-                    public void onClick(RecycleViewItemSearch entity, int position) {
+                    public void onClick(SearchDto entity, int position) {
                         runStartActivity(entity.getUsername());
                     }
                 };
@@ -80,7 +83,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private void search(String username) {
 
-        List<RecycleViewItemSearch> list = new ArrayList<RecycleViewItemSearch>();
+        List<SearchDto> list = new ArrayList<SearchDto>();
 
         firestore
                 .collection(DataBase.NAME_DB)
@@ -89,20 +92,19 @@ public class SearchActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        for (QueryDocumentSnapshot ds : task.getResult()) {
-                            RecycleViewItemSearch recycleViewItemSearch = new RecycleViewItemSearch(
-                                    ds.toObject(RecycleViewItemSearch.class).getUsername()
-                                    , ds.toObject(RecycleViewItemSearch.class).getUserId()
-                            );
-                            list.add(recycleViewItemSearch);
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot ds : task.getResult()) {
+                                SearchDto searchDto = mapper
+                                        .getEntityToDto(ds.toObject(UserEntity.class));
+                                list.add(searchDto);
+                            }
+                            adapterSearch.setList(list);
                         }
-                        adapterSearch.setList(list);
-
                     }
                 });
     }
 
-    private void runStartActivity(String username){
+    private void runStartActivity(String username) {
         Intent intent = new Intent(SearchActivity.this, MessagesSendActivity.class);
         intent.putExtra("username", username);
         startActivity(intent);

@@ -14,9 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sendmessages.Adapters.RecyclerViewAdapterMessages;
+import com.example.sendmessages.DTO.MessageDto;
 import com.example.sendmessages.Entity.ChatsEntity;
 import com.example.sendmessages.Entity.MessageEntity;
 import com.example.sendmessages.General.DataBase;
+import com.example.sendmessages.General.DateFormat;
+import com.example.sendmessages.Mapping.MessageMapper;
 import com.example.sendmessages.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -31,9 +34,10 @@ import java.util.List;
 
 public class MessagesSendActivity extends AppCompatActivity {
 
-    private String username, idChats, value;
+    private String username;
     private Toolbar toolbar;
     private FirebaseFirestore db;
+    private MessageMapper mapper = new MessageMapper();
     private EditText editText;
     private Button button;
     private SharedPreferences settings;
@@ -93,10 +97,9 @@ public class MessagesSendActivity extends AppCompatActivity {
     }
 
     private void setMessagesEntity() {
-        ZonedDateTime date = ZonedDateTime.now();
         messageEntity = new MessageEntity(
                 editText.getText().toString(),
-                date,
+                DateFormat.getFormatToDataBase().format(ZonedDateTime.now()),
                 settings.getString(DataBase.SettingsTag.USER_NAME_TAG, "")
         );
     }
@@ -149,7 +152,7 @@ public class MessagesSendActivity extends AppCompatActivity {
                 });
     }
 
-    public void updateChats(){
+    public void updateChats() {
         db
                 .collection(DataBase.CHATS_DB)
                 .document(settings.getString(DataBase.SettingsTag.USER_NAME_TAG, ""))
@@ -188,7 +191,7 @@ public class MessagesSendActivity extends AppCompatActivity {
     }
 
     private void getMessagesFromDataBase() {
-        List<MessageEntity> messageEntityList = new ArrayList<>();
+        List<MessageDto> messageList = new ArrayList<MessageDto>();
         try {
             db
                     .collection(DataBase.MESSAGES_DB)
@@ -203,14 +206,16 @@ public class MessagesSendActivity extends AppCompatActivity {
                             if (!value.isEmpty()) {
                                 adapterMessages.deleteList();
                                 for (DocumentSnapshot ds : value.getDocuments()) {
-                                    messageEntityList.add(ds.toObject(MessageEntity.class));
+                                    MessageDto message = mapper
+                                            .getEntityToDto(ds.toObject(MessageEntity.class));
+                                    messageList.add(message);
                                 }
-                                adapterMessages.setList(messageEntityList);
+                                adapterMessages.setList(messageList);
                             }
                         }
                     });
 
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 

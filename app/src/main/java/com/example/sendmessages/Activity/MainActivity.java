@@ -15,9 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sendmessages.Adapters.RecyclerViewAdapterChats;
+import com.example.sendmessages.DTO.ChatsDto;
 import com.example.sendmessages.Entity.ChatsEntity;
 import com.example.sendmessages.General.DataBase;
 import com.example.sendmessages.Interface.OnClickListener;
+import com.example.sendmessages.Mapping.ChatsMapper;
 import com.example.sendmessages.R;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recycleView;
     private RecyclerViewAdapterChats adapterChats;
     private FirebaseFirestore db;
+    private ChatsMapper mapper = new ChatsMapper();
     private SharedPreferences settings;
 
     @Override
@@ -92,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initRecycler(){
-        OnClickListener<ChatsEntity> onClickListener = new OnClickListener<ChatsEntity>() {
+        OnClickListener<ChatsDto> onClickListener = new OnClickListener<com.example.sendmessages.DTO.ChatsDto>() {
             @Override
-            public void onClick(ChatsEntity entity, int position) {
+            public void onClick(ChatsDto entity, int position) {
                 runStartActivity(entity.getUsernameToWhom());
             }
         };
@@ -107,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getChats() {
-        List<ChatsEntity> chatsEntityList = new ArrayList<ChatsEntity>();
+        List<ChatsDto> chatsList = new ArrayList<ChatsDto>();
 
         try {
             db
@@ -122,9 +125,11 @@ public class MainActivity extends AppCompatActivity {
                         ) {
                             adapterChats.deleteList();
                             for (DocumentSnapshot ds : value.getDocuments()) {
-                                chatsEntityList.add(ds.toObject(ChatsEntity.class));
+                                ChatsDto chatsDto = mapper
+                                        .getEntityToDto(ds.toObject(ChatsEntity.class));
+                                chatsList.add(chatsDto);
                             }
-                            adapterChats.setList(chatsEntityList);
+                            adapterChats.setList(chatsList);
                         }
                     });
         } catch (Exception e){
