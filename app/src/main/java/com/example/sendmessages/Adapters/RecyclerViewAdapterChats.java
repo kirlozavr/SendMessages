@@ -60,6 +60,7 @@ public class RecyclerViewAdapterChats extends RecyclerView.Adapter<RecyclerViewA
         ChatsDto chatsDto = chatsList.get(position);
         holder.textChatsName.setText(chatsDto.getUsernameToWhom());
         holder.textLastMessages.setText(chatsDto.getLastMessage());
+        holder.timeMessage.setText(chatsDto.getTimeMessageToChats());
         holder.itemView.setOnClickListener(
                 new View.OnClickListener() {
             @Override
@@ -78,12 +79,14 @@ public class RecyclerViewAdapterChats extends RecyclerView.Adapter<RecyclerViewA
 
         private TextView textChatsName;
         private TextView textLastMessages;
+        private TextView timeMessage;
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
 
             textChatsName = itemView.findViewById(R.id.textChatsName);
             textLastMessages = itemView.findViewById(R.id.textLastMessages);
+            timeMessage = itemView.findViewById(R.id.timeMessage);
         }
     }
 
