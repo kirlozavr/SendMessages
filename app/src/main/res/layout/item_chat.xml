@@ -35,7 +35,7 @@
         android:id="@+id/timeMessage"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="8dp"
+        android:layout_marginHorizontal="12dp"
         android:layout_marginVertical="8dp"
         android:fontFamily="@font/roboto_medium"
         android:gravity="center|left"
