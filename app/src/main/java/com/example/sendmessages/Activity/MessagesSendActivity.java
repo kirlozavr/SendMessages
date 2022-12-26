@@ -136,6 +136,20 @@ public class MessagesSendActivity extends AppCompatActivity {
     }
 
     private void addChatsToDataBase() {
+
+        chatsEntityFrom = new ChatsEntity(
+                chatsEntityFrom.getIdChats(),
+                chatsEntityFrom.getUsernameToWhom(),
+                messageEntity.getMessage(),
+                messageEntity.getDateTimeToDataBase()
+        );
+        chatsEntityToWhom = new ChatsEntity(
+                chatsEntityToWhom.getIdChats(),
+                chatsEntityToWhom.getUsernameToWhom(),
+                messageEntity.getMessage(),
+                messageEntity.getDateTimeToDataBase()
+        );
+
         db
                 .collection(DataBase.CHATS_DB)
                 .document(settings.getString(DataBase.SettingsTag.USER_NAME_TAG, ""))
@@ -174,18 +188,25 @@ public class MessagesSendActivity extends AppCompatActivity {
     }
 
     public void updateChats() {
+
         db
                 .collection(DataBase.CHATS_DB)
                 .document(settings.getString(DataBase.SettingsTag.USER_NAME_TAG, ""))
                 .collection(DataBase.SettingsTag.COLLECTIONS_CHATS_TAG)
                 .document(username)
-                .update("lastMessage", messageEntity.getMessage());
+                .update(
+                        "lastMessage", messageEntity.getMessage(),
+                        "timeMessageToDataBase", messageEntity.getDateTimeToDataBase()
+                );
         db
                 .collection(DataBase.CHATS_DB)
                 .document(username)
                 .collection(DataBase.SettingsTag.COLLECTIONS_CHATS_TAG)
                 .document(settings.getString(DataBase.SettingsTag.USER_NAME_TAG, ""))
-                .update("lastMessage", messageEntity.getMessage());
+                .update(
+                        "lastMessage", messageEntity.getMessage(),
+                        "timeMessageToDataBase", messageEntity.getDateTimeToDataBase()
+                );
         boolChatExist = true;
     }
 
