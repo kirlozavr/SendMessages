@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/linearLayoutItemMessages"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/chats_background"
     android:layout_margin="6dp"
+    android:background="@drawable/chats_background"
     android:elevation="4dp">
 
 
@@ -12,8 +13,8 @@
         android:id="@+id/textChatsName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
         android:layout_marginVertical="20dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginRight="24dp"
         android:layout_weight="1"
         android:fontFamily="@font/roboto_medium"
@@ -24,9 +25,22 @@
         android:id="@+id/textLastMessages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
         android:layout_marginVertical="20dp"
+        android:layout_marginRight="16dp"
         android:layout_weight="4"
         android:fontFamily="@font/roboto_medium"
         android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/timeMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="8dp"
+        android:fontFamily="@font/roboto_medium"
+        android:gravity="center|left"
+        android:textSize="14dp"
+        android:maxWidth="86dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </LinearLayout>
