@@ -10,13 +10,18 @@ public class DateFormat {
                 .ofPattern("dd-MM-yyyy HH:mm:ss.SSS OOOO", Locale.ENGLISH);
     }
 
-    public static DateTimeFormatter getFormatToMessages(){
+    public static DateTimeFormatter getFormatFromDataBase(){
+        return DateTimeFormatter
+                .ofPattern("dd-MM-yyyy HH:mm:ss.SSS zzzz", Locale.ENGLISH);
+    }
+
+    public static DateTimeFormatter getFormatToDateAndTime(){
         return DateTimeFormatter
                 .ofPattern("dd-MM-yyyy HH:mm", Locale.ENGLISH);
     }
 
-    public static DateTimeFormatter getFormatFromDataBase(){
+    public static DateTimeFormatter getFormatToTime(){
         return DateTimeFormatter
-                .ofPattern("dd-MM-yyyy HH:mm:ss.SSS zzzz", Locale.ENGLISH);
+                .ofPattern("HH:mm", Locale.ENGLISH);
     }
 }
