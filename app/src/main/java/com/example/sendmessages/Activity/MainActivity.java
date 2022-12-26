@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +20,7 @@ import com.example.sendmessages.Adapters.RecyclerViewAdapterChats;
 import com.example.sendmessages.DTO.ChatsDto;
 import com.example.sendmessages.Entity.ChatsEntity;
 import com.example.sendmessages.General.DataBase;
+import com.example.sendmessages.General.NetworkIsConnected;
 import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.Mapping.ChatsMapper;
 import com.example.sendmessages.R;
@@ -33,6 +36,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
+    private ConstraintLayout constraintLayout;
     private String username;
     private RecyclerView recycleView;
     private RecyclerViewAdapterChats adapterChats;
@@ -80,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initialization() {
         db = FirebaseFirestore.getInstance();
+        constraintLayout = findViewById(R.id.constraintLayoutMainActivity);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         settings = getSharedPreferences(DataBase.SettingsTag.SETTINGS_TAG, MODE_PRIVATE);
@@ -92,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                         username.substring(1)
         );
         initRecycler();
+        isConnected();
     }
 
     public void initRecycler(){
@@ -107,6 +113,21 @@ public class MainActivity extends AppCompatActivity {
         recycleView.setHasFixedSize(true);
         recycleView.setLayoutManager(layoutManager);
         recycleView.setAdapter(adapterChats);
+    }
+
+    public void isConnected(){
+        NetworkIsConnected networkIsConnected =
+                new ViewModelProvider(MainActivity.this)
+                        .get(NetworkIsConnected.class);
+        networkIsConnected
+                .getConnected()
+                .observe(MainActivity.this, connected -> {
+                    networkIsConnected.setSnackbar(
+                            constraintLayout,
+                            NetworkIsConnected.NO_CONNECTED_TO_NETWORK,
+                            NetworkIsConnected.VISIBLE_LONG
+                    );
+                });
     }
 
     private void getChats() {

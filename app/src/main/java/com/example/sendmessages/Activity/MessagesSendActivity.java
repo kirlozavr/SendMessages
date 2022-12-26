@@ -10,6 +10,8 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +21,7 @@ import com.example.sendmessages.Entity.ChatsEntity;
 import com.example.sendmessages.Entity.MessageEntity;
 import com.example.sendmessages.General.DataBase;
 import com.example.sendmessages.General.DateFormat;
+import com.example.sendmessages.General.NetworkIsConnected;
 import com.example.sendmessages.Mapping.MessageMapper;
 import com.example.sendmessages.R;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,6 +43,7 @@ public class MessagesSendActivity extends AppCompatActivity {
     private MessageMapper mapper = new MessageMapper();
     private EditText editText;
     private Button button;
+    private ConstraintLayout constraintLayout;
     private SharedPreferences settings;
     private MessageEntity messageEntity;
     private ChatsEntity chatsEntityFrom;
@@ -78,10 +82,12 @@ public class MessagesSendActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        constraintLayout = findViewById(R.id.constraintLayoutMessagesActivity);
         editText = findViewById(R.id.editTextSendMessages);
         button = findViewById(R.id.buttonSendMessages);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        isConnected();
     }
 
     private void initRecyclerView() {
@@ -94,6 +100,21 @@ public class MessagesSendActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapterMessages);
+    }
+
+    public void isConnected() {
+        NetworkIsConnected networkIsConnected =
+                new ViewModelProvider(MessagesSendActivity.this)
+                        .get(NetworkIsConnected.class);
+        networkIsConnected
+                .getConnected()
+                .observe(MessagesSendActivity.this, connected -> {
+                    networkIsConnected.setSnackbar(
+                            constraintLayout,
+                            NetworkIsConnected.NO_CONNECTED_TO_NETWORK,
+                            NetworkIsConnected.VISIBLE_LONG
+                    );
+                });
     }
 
     private void setMessagesEntity() {

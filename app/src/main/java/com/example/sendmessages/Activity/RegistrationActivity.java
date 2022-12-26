@@ -1,5 +1,6 @@
 package com.example.sendmessages.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,9 +14,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sendmessages.Entity.UserEntity;
 import com.example.sendmessages.General.DataBase;
+import com.example.sendmessages.General.NetworkIsConnected;
 import com.example.sendmessages.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -33,6 +37,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class RegistrationActivity extends AppCompatActivity {
 
     private boolean registration_bool = false;
+    private ConstraintLayout constraintLayout;
     private TextView textViewRegistration;
     private EditText editTextName;
     private EditText editTextNumberPassword;
@@ -72,23 +77,53 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
             }
         });
+
+        NetworkIsConnected networkIsConnected = new ViewModelProvider(RegistrationActivity.this).get(NetworkIsConnected.class);
+
+        networkIsConnected.getConnected().observe(RegistrationActivity.this, connected -> {
+
+        });
+
     }
 
-
+    @SuppressLint("ResourceType")
     private void initialization() {
         /** Инициализируем все переменные **/
         try {
-            textViewRegistration = findViewById(R.id.textViewRegistration);
-            editTextName = findViewById(R.id.editTextName);
-            editTextNumberPassword = findViewById(R.id.editTextNumberPassword);
-            buttonRegistration = findViewById(R.id.buttonRegistration);
-            buttonRegistration.setText(R.string.buttonRegistration_false);
-            textViewRegistration.setText(R.string.textViewRegistration_false);
+            initView();
             db = FirebaseFirestore.getInstance();
             settings = getSharedPreferences(DataBase.SettingsTag.SETTINGS_TAG, MODE_PRIVATE);
+
+            isConnected();
+
         } catch (Exception e) {
             Log.i("Ошибка", "Ошибка initialization Registration: " + e.getMessage());
         }
+    }
+
+    public void initView() {
+        constraintLayout = findViewById(R.id.constraintLayoutRegistrationActivity);
+        textViewRegistration = findViewById(R.id.textViewRegistration);
+        editTextName = findViewById(R.id.editTextName);
+        editTextNumberPassword = findViewById(R.id.editTextNumberPassword);
+        buttonRegistration = findViewById(R.id.buttonRegistration);
+        buttonRegistration.setText(R.string.buttonRegistration_false);
+        textViewRegistration.setText(R.string.textViewRegistration_false);
+    }
+
+    public void isConnected() {
+        NetworkIsConnected networkIsConnected =
+                new ViewModelProvider(RegistrationActivity.this)
+                        .get(NetworkIsConnected.class);
+        networkIsConnected
+                .getConnected()
+                .observe(RegistrationActivity.this, connected -> {
+                    networkIsConnected.setSnackbar(
+                            constraintLayout,
+                            NetworkIsConnected.NO_CONNECTED_TO_NETWORK,
+                            NetworkIsConnected.VISIBLE_LONG
+                    );
+                });
     }
 
     private void buttonStatus() {
@@ -202,4 +237,5 @@ public class RegistrationActivity extends AppCompatActivity {
 
         }
     }
+
 }

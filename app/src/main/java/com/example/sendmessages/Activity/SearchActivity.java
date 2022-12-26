@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +16,7 @@ import com.example.sendmessages.Adapters.RecyclerViewAdapterSearch;
 import com.example.sendmessages.DTO.SearchDto;
 import com.example.sendmessages.Entity.UserEntity;
 import com.example.sendmessages.General.DataBase;
+import com.example.sendmessages.General.NetworkIsConnected;
 import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.Mapping.SearchMapper;
 import com.example.sendmessages.R;
@@ -29,6 +32,7 @@ import java.util.List;
 public class SearchActivity extends AppCompatActivity {
 
     private SearchView searchView;
+    private ConstraintLayout constraintLayout;
     private FirebaseFirestore firestore;
     private SearchMapper mapper = new SearchMapper();
     private RecyclerView recyclerView;
@@ -42,6 +46,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void initialization() {
+        constraintLayout = findViewById(R.id.constraintLayoutSearchLayout);
         firestore = FirebaseFirestore.getInstance();
         searchView = findViewById(R.id.searchView);
         searchView.setIconifiedByDefault(false);
@@ -63,6 +68,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
         initRecycler();
+        isConnected();
     }
 
     private void initRecycler() {
@@ -79,6 +85,21 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapterSearch);
+    }
+
+    public void isConnected(){
+        NetworkIsConnected networkIsConnected =
+                new ViewModelProvider(SearchActivity.this)
+                        .get(NetworkIsConnected.class);
+        networkIsConnected
+                .getConnected()
+                .observe(SearchActivity.this, connected -> {
+                    networkIsConnected.setSnackbar(
+                            constraintLayout,
+                            NetworkIsConnected.NO_CONNECTED_TO_NETWORK,
+                            NetworkIsConnected.VISIBLE_LONG
+                    );
+                });
     }
 
     private void search(String username) {
