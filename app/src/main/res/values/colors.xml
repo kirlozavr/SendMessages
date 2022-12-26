@@ -10,4 +10,5 @@
     <color name="messages_background_from">#E4E4E4</color>
     <color name="messages_background_to_whom">#7ED4EA</color>
     <color name="search_background">#F8F7F7</color>
+    <color name="color_snackbar_not_connected">#e63946</color>
 </resources>
