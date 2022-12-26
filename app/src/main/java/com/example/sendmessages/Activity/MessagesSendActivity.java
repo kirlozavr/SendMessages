@@ -31,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -234,6 +235,7 @@ public class MessagesSendActivity extends AppCompatActivity {
 
     private void getMessagesFromDataBase() {
         List<MessageDto> messageList = new ArrayList<MessageDto>();
+        LocalDate localDate = LocalDate.now();
         try {
             db
                     .collection(DataBase.MESSAGES_DB)
@@ -248,6 +250,19 @@ public class MessagesSendActivity extends AppCompatActivity {
                             if (!value.isEmpty()) {
                                 adapterMessages.deleteList();
                                 for (DocumentSnapshot ds : value.getDocuments()) {
+
+                                    ZonedDateTime zonedDateTime =
+                                            ZonedDateTime.parse(
+                                                    ds.toObject(MessageEntity.class).getDateTimeToDataBase(),
+                                                    DateFormat.getFormatFromDataBase()
+                                            );
+
+                                    if (zonedDateTime.toLocalDate().isEqual(localDate)) {
+                                        mapper.setIsToday(false);
+                                    } else {
+                                        mapper.setIsToday(true);
+                                    }
+
                                     MessageDto message = mapper
                                             .getEntityToDto(ds.toObject(MessageEntity.class));
                                     messageList.add(message);

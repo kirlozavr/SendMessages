@@ -20,6 +20,7 @@ import com.example.sendmessages.Adapters.RecyclerViewAdapterChats;
 import com.example.sendmessages.DTO.ChatsDto;
 import com.example.sendmessages.Entity.ChatsEntity;
 import com.example.sendmessages.General.DataBase;
+import com.example.sendmessages.General.DateFormat;
 import com.example.sendmessages.General.NetworkIsConnected;
 import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.Mapping.ChatsMapper;
@@ -30,6 +31,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getChats() {
         List<ChatsDto> chatsList = new ArrayList<ChatsDto>();
+        LocalDate localDate = LocalDate.now();
 
         try {
             db
@@ -146,6 +150,19 @@ public class MainActivity extends AppCompatActivity {
                         ) {
                             adapterChats.deleteList();
                             for (DocumentSnapshot ds : value.getDocuments()) {
+
+                                ZonedDateTime zonedDateTime =
+                                        ZonedDateTime.parse(
+                                                ds.toObject(ChatsEntity.class).getTimeMessageToDataBase(),
+                                                DateFormat.getFormatFromDataBase()
+                                        );
+
+                                if(zonedDateTime.toLocalDate().isEqual(localDate)){
+                                    mapper.setIsToday(false);
+                                } else {
+                                    mapper.setIsToday(true);
+                                }
+
                                 ChatsDto chatsDto = mapper
                                         .getEntityToDto(ds.toObject(ChatsEntity.class));
                                 chatsList.add(chatsDto);
