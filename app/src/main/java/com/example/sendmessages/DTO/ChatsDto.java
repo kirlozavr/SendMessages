@@ -2,11 +2,12 @@ package com.example.sendmessages.DTO;
 
 public class ChatsDto {
 
-    private String usernameToWhom, lastMessage;
+    private String usernameToWhom, lastMessage, timeMessageToChats;
 
-    public ChatsDto(String usernameToWhom, String lastMessage) {
+    public ChatsDto(String usernameToWhom, String lastMessage, String timeMessageToChats) {
         this.usernameToWhom = usernameToWhom;
         this.lastMessage = lastMessage;
+        this.timeMessageToChats = timeMessageToChats;
     }
 
     public String getUsernameToWhom() {
@@ -23,5 +24,13 @@ public class ChatsDto {
 
     public void setLastMessage(String lastMessage) {
         this.lastMessage = lastMessage;
+    }
+
+    public String getTimeMessageToChats() {
+        return timeMessageToChats;
+    }
+
+    public void setTimeMessageToChats(String timeMessageToChats) {
+        this.timeMessageToChats = timeMessageToChats;
     }
 }
