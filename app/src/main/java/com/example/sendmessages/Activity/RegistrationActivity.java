@@ -77,13 +77,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
             }
         });
-
-        NetworkIsConnected networkIsConnected = new ViewModelProvider(RegistrationActivity.this).get(NetworkIsConnected.class);
-
-        networkIsConnected.getConnected().observe(RegistrationActivity.this, connected -> {
-
-        });
-
     }
 
     @SuppressLint("ResourceType")
