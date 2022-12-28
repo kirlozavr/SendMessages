@@ -19,6 +19,10 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ *  Класс отвечает за проверку подключения к сети интернет.
+ * **/
+
 public class NetworkIsConnected extends AndroidViewModel {
 
     private final MutableLiveData<Boolean> mConnected = new MutableLiveData<>();
@@ -37,12 +41,22 @@ public class NetworkIsConnected extends AndroidViewModel {
             return;
         }
 
+        /**
+         *  Настраиваем запрос, что мы хотим прослушивать.
+         * **/
+
         NetworkRequest networkRequest = new NetworkRequest.Builder()
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
                 .build();
+
+        /**
+         *  Настраиваем обратный вызов,
+         *  который будет вызываться системой при наступлении события.
+         *  (Отключение / Подключение к сети)
+         * **/
 
         ConnectivityManager.NetworkCallback networkCallback =
                 new ConnectivityManager.NetworkCallback() {
@@ -69,6 +83,10 @@ public class NetworkIsConnected extends AndroidViewModel {
                     }
                 };
 
+        /**
+         * Регистрируем все наши настройки в менеджере.
+         * **/
+
         connectivityManager
                 .registerNetworkCallback(networkRequest, networkCallback);
     }
@@ -77,6 +95,10 @@ public class NetworkIsConnected extends AndroidViewModel {
     public MutableLiveData<Boolean> getConnected() {
         return mConnected;
     }
+
+    /**
+     * Вывод уведомления об отсутствии подключения к сети интернет.
+     * **/
 
     public void setSnackbar(View view, String message, int flag) {
         Snackbar

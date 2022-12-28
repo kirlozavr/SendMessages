@@ -55,7 +55,9 @@ public class RegistrationActivity extends AppCompatActivity {
         buttonRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /** Проверяем поля editTextName и editTextPassword на введенные значения **/
+                /**
+                 * Проверяем поля editTextName и editTextPassword на введенные значения
+                 * **/
                 if (editTextName.getText().toString().trim().equals("")) {
                     Toast.makeText(RegistrationActivity.this, R.string.Toast_name, Toast.LENGTH_LONG).show();
                 } else if (editTextNumberPassword.getText().toString().trim().equals("")) {
@@ -70,7 +72,9 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    /** Пользователь нажал на textViewRegistration, начинается проверка: **/
+                    /**
+                     * Пользователь нажал на textViewRegistration, начинается проверка:
+                     * **/
 
                     buttonStatus();
                 } catch (Exception e) {
@@ -82,7 +86,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
     @SuppressLint("ResourceType")
     private void initialization() {
-        /** Инициализируем все переменные **/
+        /**
+         * Инициализируем все переменные
+         * **/
         try {
             initView();
             db = FirebaseFirestore.getInstance();
@@ -122,12 +128,16 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void buttonStatus() {
         if (registration_bool) {
-            /** если пользователь зарегистрирован, поменять текст buttonRegistration и textViewRegistration **/
+            /**
+             * если пользователь зарегистрирован, поменять текст buttonRegistration и textViewRegistration
+             * **/
             registration_bool = false;
             buttonRegistration.setText(R.string.buttonRegistration_false);
             textViewRegistration.setText(R.string.textViewRegistration_false);
         } else {
-            /** если пользователь не зарегистрирован, поменять текст buttonRegistration и textViewRegistration **/
+            /**
+             * если пользователь не зарегистрирован, поменять текст buttonRegistration и textViewRegistration
+             * **/
             registration_bool = true;
             buttonRegistration.setText(R.string.buttonRegistration_true);
             textViewRegistration.setText(R.string.textViewRegistration_true);
@@ -135,7 +145,9 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void runSearchUserForRegistrationOrInput() {
-        /** Обращаемся к нашей бд, к папке NAME_DB, ко всем полям username на наличие по имени введенным пользователем **/
+        /**
+         * Обращаемся к нашей бд, к папке NAME_DB, ко всем полям username на наличие по имени введенным пользователем
+         * **/
         db
                 .collection(DataBase.NAME_DB)
                 .document(editTextName.getText().toString().trim())
@@ -146,7 +158,9 @@ public class RegistrationActivity extends AppCompatActivity {
                         DocumentSnapshot ds = task.getResult();
                         UserEntity userEntity = ds.toObject(UserEntity.class);
 
-                        /**  Пользователь хочет войти и верно ввел данные **/
+                        /**
+                         * Пользователь хочет войти и верно ввел данные
+                         * **/
                         if (
                                 !registration_bool &&
                                         ds.exists() &&
@@ -159,7 +173,9 @@ public class RegistrationActivity extends AppCompatActivity {
                             runStartActivity();
                         }
 
-                        /**  Пользователь хочет войти и неверно ввел данные **/
+                        /**
+                         * Пользователь хочет войти и неверно ввел данные
+                         * **/
                         if (
                                 !registration_bool &&
                                         (!ds.exists() ||
@@ -176,7 +192,9 @@ public class RegistrationActivity extends AppCompatActivity {
                             ).show();
                         }
 
-                        /**  Пользователь хочет зарегестрироваться и такого пользователя еще нет **/
+                        /**
+                         * Пользователь хочет зарегестрироваться и такого пользователя еще нет
+                         * **/
                         if (
                                 registration_bool &&
                                         !ds.exists()
@@ -185,7 +203,9 @@ public class RegistrationActivity extends AppCompatActivity {
                             runStartActivity();
                         }
 
-                        /**  Пользователь хочет зарегестрироваться и такой пользователь уже есть **/
+                        /**
+                         * Пользователь хочет зарегестрироваться и такой пользователь уже есть
+                         * **/
                         if (
                                 registration_bool &&
                                         ds.exists()
@@ -200,9 +220,14 @@ public class RegistrationActivity extends AppCompatActivity {
                 });
     }
 
-    private void runStartActivity() {
-        /** Запуск ChatsActivity и закрытие нынещнего активити **/
+    /**
+     * Запуск ChatsActivity и закрытие нынещнего активити
+     * **/
 
+    private void runStartActivity() {
+        /**
+         * Проверка на галочку "Запомнить меня"
+         * **/
         if (checkBox.isChecked()) {
             Data.putStringPreferences(
                     this,
@@ -217,12 +242,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 editTextName.getText().toString().trim()
         );
 
-        Data.putBooleanPreferences(
-                this,
-                Data.IS_LAUNCHED,
-                true
-        );
-
         Intent intent = new Intent(
                 RegistrationActivity.this,
                 ChatsActivity.class
@@ -232,7 +251,9 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void sendRegistration() {
-        /** Запись всех значений в переменные и регистрация нового пользователя **/
+        /**
+         * Запись всех значений в переменные и регистрация нового пользователя
+         * **/
         try {
             int id = (int) (Math.random() * 10000000);
             String username = editTextName.getText().toString().trim();

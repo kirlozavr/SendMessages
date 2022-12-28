@@ -9,6 +9,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.sendmessages.General.Data;
 import com.example.sendmessages.R;
 
+/**
+ *  Этот класс запускается первый в приложении,
+ * здесь происходит проверка на сохранение данных пользователя при входе.
+ * Если пользователь нажал галочку "Запомнить меня",
+ * то открывается список с чатами этого пользователя,
+ * если же нет, то экран регистрации.
+ * **/
+
 public class MainActivity extends AppCompatActivity {
 
     @Override

@@ -36,6 +36,15 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс отвечает за отображение переписки конкретных пользователей
+ * и ввод сообщений этому пользователю.
+ * При запуске этого класса, отправляется запрос в БД,
+ * на наличие уже существующего чата между пользователями,
+ * если чата еще нет, то создается новый, но не записывается в БД.
+ * Запись происходит тогда, когда пользователь отправляет сообщение.
+ * **/
+
 public class MessagesSendActivity extends AppCompatActivity {
 
     private String usernameFrom, usernameToWhom;
@@ -102,6 +111,10 @@ public class MessagesSendActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapterMessages);
     }
 
+    /**
+     *  Проверка на подключение к сети интернет
+     * **/
+
     public void isConnected() {
         NetworkIsConnected networkIsConnected =
                 new ViewModelProvider(MessagesSendActivity.this)
@@ -117,6 +130,10 @@ public class MessagesSendActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     *  Создание сущности сообщения
+     * **/
+
     private void setMessagesEntity() {
         messageEntity = new MessageEntity(
                 editText.getText().toString(),
@@ -124,6 +141,12 @@ public class MessagesSendActivity extends AppCompatActivity {
                 usernameFrom
         );
     }
+
+    /**
+     * Создание сущности чата, создается 2 сущности,
+     * чтобы создать 2 одинаковые записи в бд с одинаковым id.
+     * Чат А с В по id:1 и чат В с А по id:1
+     * **/
 
     private void setChatsEntity() {
         chatsEntityFrom = new ChatsEntity(
@@ -134,6 +157,10 @@ public class MessagesSendActivity extends AppCompatActivity {
                 usernameFrom
         );
     }
+
+    /**
+     *  Добавление чатов в БД
+     * **/
 
     private void addChatsToDataBase() {
 
@@ -165,6 +192,12 @@ public class MessagesSendActivity extends AppCompatActivity {
         boolChatExist = false;
     }
 
+    /**
+     *  Получение чата с конкретным пользователем из БД,
+     *  если его еще нет, то создается новый.
+     *  И вывод всех сообщений между пользователями.
+     * **/
+
     private void getChat() {
         db
                 .collection(DataBase.CHATS_DB)
@@ -186,6 +219,11 @@ public class MessagesSendActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    /**
+     *  Обновление чата в БД, происходит перезапись значений:
+     *  Последнее сообщение, время отправки сообщения.
+     * **/
 
     public void updateChats() {
 
@@ -210,6 +248,10 @@ public class MessagesSendActivity extends AppCompatActivity {
         boolChatExist = true;
     }
 
+    /**
+     *  Запись сообщения в БД.
+     * **/
+
     private void addMessagesToDataBase() {
         if (
                 editText.getText().toString() != null
@@ -232,6 +274,10 @@ public class MessagesSendActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *  Получение списка всех сообщений из БД.
+     * **/
+
     private void getMessagesFromDataBase() {
         List<MessageDto> messageList = new ArrayList<MessageDto>();
         LocalDate localDate = LocalDate.now();
@@ -248,6 +294,12 @@ public class MessagesSendActivity extends AppCompatActivity {
                         ) {
                             adapterMessages.deleteList();
                             for (DocumentSnapshot ds : value.getDocuments()) {
+
+                                /**
+                                 *  Проверка на существование даты, если ее нет,
+                                 *  то конвертация через маппер не осуществляется.
+                                 * **/
+
                                 if (ds.toObject(MessageEntity.class).getDateTimeToDataBase() != null) {
 
                                     ZonedDateTime zonedDateTime =
@@ -255,6 +307,13 @@ public class MessagesSendActivity extends AppCompatActivity {
                                                     ds.toObject(MessageEntity.class).getDateTimeToDataBase(),
                                                     DateFormat.getFormatFromDataBase()
                                             );
+
+                                    /**
+                                     *  Проверка на сегодняшнюю дату,
+                                     *  если дата отправки сообщения совпадает с сегодняшней,
+                                     *  то выводится только время, если нет,
+                                     *  то дополнительно выводится год, месяц и день.
+                                     * **/
 
                                     if (zonedDateTime.toLocalDate().isEqual(localDate)) {
                                         mapper.setIsToday(false);

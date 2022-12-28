@@ -29,6 +29,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  Класс отвечает за поиск пользователей, чтобы начать с ними чат.
+ * **/
+
 public class SearchActivity extends AppCompatActivity {
 
     private SearchView searchView;
@@ -87,6 +91,10 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapterSearch);
     }
 
+    /**
+     * Проверка на подключение к сети интернет.
+     * **/
+
     public void isConnected() {
         NetworkIsConnected networkIsConnected =
                 new ViewModelProvider(SearchActivity.this)
@@ -101,6 +109,10 @@ public class SearchActivity extends AppCompatActivity {
                     );
                 });
     }
+
+    /**
+     *  Поиск пользователя в БД по введенному логину
+     * **/
 
     private void search(String username) {
 

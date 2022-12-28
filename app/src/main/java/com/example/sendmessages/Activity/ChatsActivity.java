@@ -36,6 +36,10 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  Класс отвечает за представление чатов конкретного пользователя
+ *  **/
+
 public class ChatsActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
@@ -57,6 +61,9 @@ public class ChatsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        /**
+         *  Удалаются временные данные необходимые только во время работы приложения
+         *  **/
         Data.removePreferences(this, Data.USERNAME);
     }
 
@@ -76,14 +83,19 @@ public class ChatsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search_user: {
+                /**
+                 *  Пользователь нажимает на значок поиска
+                 *  **/
                 Intent intent = new Intent(ChatsActivity.this, SearchActivity.class);
                 startActivity(intent);
                 break;
             }
             case R.id.exit: {
+                /**
+                 * Пользователь нажимает на значок выхода из приложения
+                 * **/
                 Data.removePreferences(this, Data.USERNAME);
                 Data.removePreferences(this, Data.SAVE_USERNAME);
-                Data.removePreferences(this, Data.IS_LAUNCHED);
                 Intent intent = new Intent(ChatsActivity.this, RegistrationActivity.class);
                 startActivity(intent);
                 finish();
@@ -126,6 +138,9 @@ public class ChatsActivity extends AppCompatActivity {
         recycleView.setAdapter(adapterChats);
     }
 
+    /**
+     *  В этом методе происходит проверка на подключение к сети интернет.
+     *  **/
     public void isConnected() {
         NetworkIsConnected networkIsConnected =
                 new ViewModelProvider(ChatsActivity.this)
@@ -141,6 +156,9 @@ public class ChatsActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * В этом методе происходит получение списка всех чатом пользователя и вывод их на экран.
+     * **/
     private void getChats() {
         List<ChatsDto> chatsList = new ArrayList<ChatsDto>();
         LocalDate localDate = LocalDate.now();
@@ -158,6 +176,10 @@ public class ChatsActivity extends AppCompatActivity {
                         ) {
                             adapterChats.deleteList();
                             for (DocumentSnapshot ds : value.getDocuments()) {
+                                /**
+                                 * Проверка, если времени нет,
+                                 * то не загружает эти данные в маппер.
+                                 * **/
                                 if (
                                         ds.toObject(ChatsEntity.class).getTimeMessageToDataBase() != null
                                 ) {
@@ -167,6 +189,11 @@ public class ChatsActivity extends AppCompatActivity {
                                                     DateFormat.getFormatFromDataBase()
                                             );
 
+                                    /**
+                                     * Проверка на дату,
+                                     * если дата сегодняшняя,
+                                     * то не показыает год, месяц и день.
+                                     * **/
                                     if (zonedDateTime.toLocalDate().isEqual(localDate)) {
                                         mapper.setIsToday(false);
                                     } else {
