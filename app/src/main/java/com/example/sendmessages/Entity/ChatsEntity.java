@@ -16,7 +16,7 @@ public class ChatsEntity {
     }
 
     public ChatsEntity(String usernameToWhom) {
-        this.idChats = (int)((Math.random() * 10000000));
+        this.idChats = (int) ((Math.random() * 10000000));
         this.usernameToWhom = usernameToWhom;
     }
 
