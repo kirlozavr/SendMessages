@@ -1,6 +1,5 @@
 package com.example.sendmessages.Activity;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +18,7 @@ import com.example.sendmessages.Adapters.RecyclerViewAdapterMessages;
 import com.example.sendmessages.DTO.MessageDto;
 import com.example.sendmessages.Entity.ChatsEntity;
 import com.example.sendmessages.Entity.MessageEntity;
+import com.example.sendmessages.General.Data;
 import com.example.sendmessages.General.DataBase;
 import com.example.sendmessages.General.DateFormat;
 import com.example.sendmessages.General.NetworkIsConnected;
@@ -38,17 +38,15 @@ import java.util.List;
 
 public class MessagesSendActivity extends AppCompatActivity {
 
-    private String username;
+    private String usernameFrom, usernameToWhom;
     private Toolbar toolbar;
     private FirebaseFirestore db;
     private MessageMapper mapper = new MessageMapper();
     private EditText editText;
     private Button button;
     private ConstraintLayout constraintLayout;
-    private SharedPreferences settings;
     private MessageEntity messageEntity;
-    private ChatsEntity chatsEntityFrom;
-    private ChatsEntity chatsEntityToWhom;
+    private ChatsEntity chatsEntityFrom, chatsEntityToWhom;
     private RecyclerViewAdapterMessages adapterMessages;
     private RecyclerView recyclerView;
     private boolean boolChatExist = false;
@@ -72,11 +70,12 @@ public class MessagesSendActivity extends AppCompatActivity {
         try {
             db = FirebaseFirestore.getInstance();
             initView();
-            username = getIntent().getStringExtra("username");
-            getSupportActionBar().setTitle("Чат с " + username);
-            settings = getSharedPreferences(DataBase.SettingsTag.SETTINGS_TAG, MODE_PRIVATE);
+            usernameToWhom = getIntent().getStringExtra("username");
+            usernameFrom = Data
+                    .getStringPreferences(this, Data.USERNAME);
+            getSupportActionBar().setTitle("Чат с " + usernameToWhom);
             initRecyclerView();
-            getChats();
+            getChat();
         } catch (Exception e) {
             Log.i("Ошибка", "Ошибка initializationMessagesSend: " + e.getMessage());
         }
@@ -95,7 +94,7 @@ public class MessagesSendActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycleViewSendMessages);
         adapterMessages = new RecyclerViewAdapterMessages(
                 MessagesSendActivity.this,
-                settings.getString(DataBase.SettingsTag.USER_NAME_TAG, "")
+                Data.getSharedPreferences(this).getString(Data.USERNAME, "")
         );
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
@@ -122,17 +121,17 @@ public class MessagesSendActivity extends AppCompatActivity {
         messageEntity = new MessageEntity(
                 editText.getText().toString(),
                 DateFormat.getFormatToDataBase().format(ZonedDateTime.now()),
-                settings.getString(DataBase.SettingsTag.USER_NAME_TAG, "")
+                usernameFrom
         );
     }
 
     private void setChatsEntity() {
         chatsEntityFrom = new ChatsEntity(
-                username
+                usernameToWhom
         );
         chatsEntityToWhom = new ChatsEntity(
                 chatsEntityFrom.getIdChats(),
-                settings.getString(DataBase.SettingsTag.USER_NAME_TAG, "")
+                usernameFrom
         );
     }
 
@@ -153,25 +152,25 @@ public class MessagesSendActivity extends AppCompatActivity {
 
         db
                 .collection(DataBase.CHATS_DB)
-                .document(settings.getString(DataBase.SettingsTag.USER_NAME_TAG, ""))
-                .collection(DataBase.SettingsTag.COLLECTIONS_CHATS_TAG)
-                .document(username)
+                .document(usernameFrom)
+                .collection(DataBase.ListTag.COLLECTIONS_CHATS_TAG)
+                .document(usernameToWhom)
                 .set(chatsEntityFrom);
         db
                 .collection(DataBase.CHATS_DB)
-                .document(username)
-                .collection(DataBase.SettingsTag.COLLECTIONS_CHATS_TAG)
-                .document(settings.getString(DataBase.SettingsTag.USER_NAME_TAG, ""))
+                .document(usernameToWhom)
+                .collection(DataBase.ListTag.COLLECTIONS_CHATS_TAG)
+                .document(usernameFrom)
                 .set(chatsEntityToWhom);
         boolChatExist = false;
     }
 
-    private void getChats() {
+    private void getChat() {
         db
                 .collection(DataBase.CHATS_DB)
-                .document(settings.getString(DataBase.SettingsTag.USER_NAME_TAG, ""))
-                .collection(DataBase.SettingsTag.COLLECTIONS_CHATS_TAG)
-                .document(username)
+                .document(usernameFrom)
+                .collection(DataBase.ListTag.COLLECTIONS_CHATS_TAG)
+                .document(usernameToWhom)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -192,18 +191,18 @@ public class MessagesSendActivity extends AppCompatActivity {
 
         db
                 .collection(DataBase.CHATS_DB)
-                .document(settings.getString(DataBase.SettingsTag.USER_NAME_TAG, ""))
-                .collection(DataBase.SettingsTag.COLLECTIONS_CHATS_TAG)
-                .document(username)
+                .document(usernameFrom)
+                .collection(DataBase.ListTag.COLLECTIONS_CHATS_TAG)
+                .document(usernameToWhom)
                 .update(
                         "lastMessage", messageEntity.getMessage(),
                         "timeMessageToDataBase", messageEntity.getDateTimeToDataBase()
                 );
         db
                 .collection(DataBase.CHATS_DB)
-                .document(username)
-                .collection(DataBase.SettingsTag.COLLECTIONS_CHATS_TAG)
-                .document(settings.getString(DataBase.SettingsTag.USER_NAME_TAG, ""))
+                .document(usernameToWhom)
+                .collection(DataBase.ListTag.COLLECTIONS_CHATS_TAG)
+                .document(usernameFrom)
                 .update(
                         "lastMessage", messageEntity.getMessage(),
                         "timeMessageToDataBase", messageEntity.getDateTimeToDataBase()
@@ -223,7 +222,7 @@ public class MessagesSendActivity extends AppCompatActivity {
             db
                     .collection(DataBase.MESSAGES_DB)
                     .document(chatsEntityFrom.getIdChats().toString())
-                    .collection(DataBase.SettingsTag.COLLECTIONS_MESSAGES_TAG)
+                    .collection(DataBase.ListTag.COLLECTIONS_MESSAGES_TAG)
                     .document(messageEntity.getDateTimeToDataBase())
                     .set(messageEntity);
             editText
@@ -240,16 +239,16 @@ public class MessagesSendActivity extends AppCompatActivity {
             db
                     .collection(DataBase.MESSAGES_DB)
                     .document(chatsEntityFrom.getIdChats().toString())
-                    .collection(DataBase.SettingsTag.COLLECTIONS_MESSAGES_TAG)
+                    .collection(DataBase.ListTag.COLLECTIONS_MESSAGES_TAG)
                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(
                                 @Nullable QuerySnapshot value,
                                 @Nullable FirebaseFirestoreException error
                         ) {
-                            if (!value.isEmpty()) {
-                                adapterMessages.deleteList();
-                                for (DocumentSnapshot ds : value.getDocuments()) {
+                            adapterMessages.deleteList();
+                            for (DocumentSnapshot ds : value.getDocuments()) {
+                                if (ds.toObject(MessageEntity.class).getDateTimeToDataBase() != null) {
 
                                     ZonedDateTime zonedDateTime =
                                             ZonedDateTime.parse(
