@@ -18,8 +18,7 @@
         android:theme="@style/Theme.SendMessages"
         tools:targetApi="31" >
 
-        <activity
-            android:name=".Activity.RegistrationActivity"
+        <activity android:name=".Activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,10 +28,20 @@
         </activity>
 
         <activity
-            android:name=".Activity.MainActivity"
+            android:name=".Activity.RegistrationActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".Activity.ChatsActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -42,7 +51,7 @@
             android:name=".Activity.MessagesSendActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -52,7 +61,7 @@
             android:name=".Activity.SearchActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
