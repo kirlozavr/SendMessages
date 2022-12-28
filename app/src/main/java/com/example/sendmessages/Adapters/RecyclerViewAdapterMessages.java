@@ -24,17 +24,17 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
     private final int TYPE_FROM = 0;
     private final int TYPE_TO_WHOM = 1;
 
-    public RecyclerViewAdapterMessages(Context context, String usernameFrom){
+    public RecyclerViewAdapterMessages(Context context, String usernameFrom) {
         this.usernameFrom = usernameFrom;
         this.layoutInflater = LayoutInflater.from(context);
     }
 
-    public void setList(List<MessageDto> messageList){
+    public void setList(List<MessageDto> messageList) {
         this.messageList = messageList;
         notifyDataSetChanged();
     }
 
-    public void deleteList(){
+    public void deleteList() {
         this.messageList.clear();
         notifyDataSetChanged();
     }
@@ -42,7 +42,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
     @Override
     public int getItemViewType(int position) {
         MessageDto message = messageList.get(position);
-        if(message.getUsernameFrom().equals(usernameFrom)){
+        if (message.getUsernameFrom().equals(usernameFrom)) {
             return TYPE_FROM;
         } else {
             return TYPE_TO_WHOM;
@@ -52,7 +52,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == TYPE_FROM){
+        if (viewType == TYPE_FROM) {
             View view = LayoutInflater
                     .from(parent.getContext())
                     .inflate(R.layout.item_message_from, parent, false);
@@ -70,7 +70,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
             @NonNull RecyclerView.ViewHolder holder,
             @SuppressLint("RecyclerView") int position
     ) {
-        if(holder.getItemViewType() == TYPE_FROM){
+        if (holder.getItemViewType() == TYPE_FROM) {
             messageFrom(
                     (RecycleHolderMessageFrom) holder,
                     position
@@ -91,7 +91,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
     private void messageFrom(
             @NonNull RecycleHolderMessageFrom holder,
             int position
-    ){
+    ) {
         MessageDto message = messageList.get(position);
         holder.textFrom
                 .setText(message.getMessage());
@@ -102,7 +102,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
 
     private void messageToWhom(@NonNull RecycleHolderMessageToWhom holder,
                                int position
-    ){
+    ) {
         MessageDto message = messageList.get(position);
         holder.textToWhom
                 .setText(message.getMessage());

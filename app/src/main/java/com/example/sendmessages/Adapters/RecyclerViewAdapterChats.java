@@ -17,7 +17,8 @@ import com.example.sendmessages.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewAdapterChats extends RecyclerView.Adapter<RecyclerViewAdapterChats.RecyclerViewHolder> {
+public class RecyclerViewAdapterChats
+        extends RecyclerView.Adapter<RecyclerViewAdapterChats.RecyclerViewHolder> {
 
     private LayoutInflater inflater;
     private List<ChatsDto> chatsList = new ArrayList<ChatsDto>();
@@ -31,12 +32,12 @@ public class RecyclerViewAdapterChats extends RecyclerView.Adapter<RecyclerViewA
         this.inflater = LayoutInflater.from(context);
     }
 
-    public void setList(List<ChatsDto> chatsList){
+    public void setList(List<ChatsDto> chatsList) {
         this.chatsList = chatsList;
         notifyDataSetChanged();
     }
 
-    public void deleteList(){
+    public void deleteList() {
         this.chatsList.clear();
         notifyDataSetChanged();
     }
@@ -63,11 +64,11 @@ public class RecyclerViewAdapterChats extends RecyclerView.Adapter<RecyclerViewA
         holder.timeMessage.setText(chatsDto.getTimeMessageToChats());
         holder.itemView.setOnClickListener(
                 new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickListener.onClick(chatsDto, position);
-            }
-        });
+                    @Override
+                    public void onClick(View view) {
+                        onClickListener.onClick(chatsDto, position);
+                    }
+                });
     }
 
     @Override
@@ -75,7 +76,7 @@ public class RecyclerViewAdapterChats extends RecyclerView.Adapter<RecyclerViewA
         return chatsList.size();
     }
 
-    public static class RecyclerViewHolder extends RecyclerView.ViewHolder{
+    public static class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textChatsName;
         private TextView textLastMessages;

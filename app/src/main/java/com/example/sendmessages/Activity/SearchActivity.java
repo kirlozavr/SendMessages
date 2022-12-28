@@ -87,7 +87,7 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapterSearch);
     }
 
-    public void isConnected(){
+    public void isConnected() {
         NetworkIsConnected networkIsConnected =
                 new ViewModelProvider(SearchActivity.this)
                         .get(NetworkIsConnected.class);

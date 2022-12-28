@@ -7,7 +7,9 @@ public class SearchDto {
     public SearchDto(String username) {
         this.username = username;
     }
-    public SearchDto(){}
+
+    public SearchDto() {
+    }
 
     public String getUsername() {
         return username;

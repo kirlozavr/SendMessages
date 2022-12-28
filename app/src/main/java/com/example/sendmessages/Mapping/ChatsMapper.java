@@ -19,7 +19,7 @@ public class ChatsMapper implements Mapping<ChatsEntity, ChatsDto> {
                 entity.getTimeMessageToDataBase(),
                 DateFormat.getFormatFromDataBase()
         );
-        if(isToday) {
+        if (isToday) {
             return new ChatsDto(
                     entity.getUsernameToWhom(),
                     entity.getLastMessage(),
@@ -39,7 +39,7 @@ public class ChatsMapper implements Mapping<ChatsEntity, ChatsDto> {
         return null;
     }
 
-    public void setIsToday(boolean isToday){
+    public void setIsToday(boolean isToday) {
         this.isToday = isToday;
     }
 }

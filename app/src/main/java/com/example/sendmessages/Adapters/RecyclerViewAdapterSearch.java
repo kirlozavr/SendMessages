@@ -17,7 +17,8 @@ import com.example.sendmessages.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewAdapterSearch extends RecyclerView.Adapter<RecyclerViewAdapterSearch.RecycleHolderSearch> {
+public class RecyclerViewAdapterSearch extends
+        RecyclerView.Adapter<RecyclerViewAdapterSearch.RecycleHolderSearch> {
 
     private final OnClickListener<SearchDto> onClickListener;
     private List<SearchDto> searchList = new ArrayList<SearchDto>();
@@ -36,14 +37,17 @@ public class RecyclerViewAdapterSearch extends RecyclerView.Adapter<RecyclerView
         notifyDataSetChanged();
     }
 
-    public void deleteList(){
+    public void deleteList() {
         this.searchList.clear();
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public RecyclerViewAdapterSearch.RecycleHolderSearch onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerViewAdapterSearch.RecycleHolderSearch onCreateViewHolder(
+            @NonNull ViewGroup parent,
+            int viewType
+    ) {
         View view = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.item_search, parent, false);

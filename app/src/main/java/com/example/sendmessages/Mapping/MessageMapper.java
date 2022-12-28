@@ -18,9 +18,9 @@ public class MessageMapper implements Mapping<MessageEntity, MessageDto> {
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(
                 entity.getDateTimeToDataBase(),
                 DateFormat.getFormatFromDataBase()
-                );
+        );
 
-        if(isToday) {
+        if (isToday) {
             return new MessageDto(
                     entity.getMessage(),
                     DateFormat.getFormatToDateAndTime().format(zonedDateTime),
@@ -40,7 +40,7 @@ public class MessageMapper implements Mapping<MessageEntity, MessageDto> {
         return null;
     }
 
-    public void setIsToday(boolean isToday){
+    public void setIsToday(boolean isToday) {
         this.isToday = isToday;
     }
 }
