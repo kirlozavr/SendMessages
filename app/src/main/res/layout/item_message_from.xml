@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         android:layout_marginVertical="8dp"
+        android:autoLink="all"
         android:fontFamily="@font/roboto_medium"
         android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
