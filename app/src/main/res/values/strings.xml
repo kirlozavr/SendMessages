@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SendMessages</string>
+    <string name="app_name">Чат</string>
     <string name="edit_text_name">Введите никнейм</string>
     <string name="edit_text_password">Введите пароль</string>
     <string name="edit_text_messages">Введите текст</string>
