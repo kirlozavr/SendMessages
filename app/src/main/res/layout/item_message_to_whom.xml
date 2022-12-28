@@ -20,6 +20,8 @@
         android:layout_marginVertical="8dp"
         android:autoLink="all"
         android:fontFamily="@font/roboto_medium"
+        android:textColor="@color/black"
+        android:textColorLink="@color/color_lint"
         android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/timeToWhom"
