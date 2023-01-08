@@ -33,7 +33,6 @@ public class ImageService {
     private static final String KEY = "key";
     private ActivityResultRegistry resultRegistry;
     private ActivityResultLauncher<String> resultLauncher;
-    private Uri uriImage;
 
     public ImageService(
             @NonNull ActivityResultRegistry resultRegistry,
@@ -154,6 +153,7 @@ public class ImageService {
             @NonNull ImageView view,
             @NonNull View layout
     ) {
+        view.setImageDrawable(null);
         view.clearColorFilter();
         layout.setVisibility(View.INVISIBLE);
     }
