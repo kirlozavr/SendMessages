@@ -18,8 +18,8 @@
 
     <ImageView
         android:id="@+id/imageViewMessage"
-        android:layout_width="196dp"
-        android:layout_height="196dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:adjustViewBounds="true"
         android:maxWidth="256dp"
