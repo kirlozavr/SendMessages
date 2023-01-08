@@ -102,13 +102,14 @@ public class MessageService {
     }
 
     private boolean setMessagesEntity() {
+
         boolean isExistText =
                 !editText.getText().toString().trim().equals("")
                         && editText.getText().toString().trim().length() != 0;
 
         if (
                 isExistText
-                        || imageView.getDrawable() != null
+                        || getUriImage() != null
         ) {
             messageEntity = new MessageEntity(
                     DateFormat.getFormatToDataBase().format(ZonedDateTime.now()),
@@ -116,12 +117,11 @@ public class MessageService {
                     editText.getText().toString().trim()
             );
 
-            if (imageView.getDrawable() != null) {
-                if (uriImage != null) {
-                    messageEntity.setUriImage(uriImage.toString());
-                }
+            if (getUriImage() != null) {
+                messageEntity.setUriImage(getUriImage().toString());
             }
 
+            deleteUriImage();
             return true;
         } else {
             return false;
