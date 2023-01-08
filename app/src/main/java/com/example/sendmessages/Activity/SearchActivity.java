@@ -16,7 +16,7 @@ import com.example.sendmessages.Adapters.RecyclerViewAdapterSearch;
 import com.example.sendmessages.DTO.SearchDto;
 import com.example.sendmessages.Entity.UserEntity;
 import com.example.sendmessages.General.DataBase;
-import com.example.sendmessages.General.NetworkIsConnected;
+import com.example.sendmessages.Sevice.NetworkIsConnectedService;
 import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.Mapping.SearchMapper;
 import com.example.sendmessages.R;
@@ -96,16 +96,16 @@ public class SearchActivity extends AppCompatActivity {
      * **/
 
     public void isConnected() {
-        NetworkIsConnected networkIsConnected =
+        NetworkIsConnectedService networkIsConnectedService =
                 new ViewModelProvider(SearchActivity.this)
-                        .get(NetworkIsConnected.class);
-        networkIsConnected
+                        .get(NetworkIsConnectedService.class);
+        networkIsConnectedService
                 .getConnected()
                 .observe(SearchActivity.this, connected -> {
-                    networkIsConnected.setSnackbar(
+                    networkIsConnectedService.setSnackbar(
                             constraintLayout,
-                            NetworkIsConnected.NO_CONNECTED_TO_NETWORK,
-                            NetworkIsConnected.VISIBLE_LONG
+                            NetworkIsConnectedService.NO_CONNECTED_TO_NETWORK,
+                            NetworkIsConnectedService.VISIBLE_LONG
                     );
                 });
     }
