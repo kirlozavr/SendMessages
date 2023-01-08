@@ -24,7 +24,6 @@ import com.example.sendmessages.R;
 import com.example.sendmessages.Sevice.ImageService;
 import com.example.sendmessages.Sevice.MessageService;
 import com.example.sendmessages.Sevice.NetworkIsConnectedService;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * Класс отвечает за отображение переписки конкретных пользователей
@@ -40,7 +39,6 @@ public class MessagesSendActivity extends AppCompatActivity {
     private MessageService messageService;
     private String usernameFrom, usernameToWhom;
     private Toolbar toolbar;
-    private FirebaseFirestore db;
     private ImageService imageService;
     private EditText editText;
     private Button button;
@@ -67,7 +65,7 @@ public class MessagesSendActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(imageView.getDrawable() == null){
+                        if (imageView.getDrawable() == null) {
                             messageService.addMessagesToDataBase();
                         } else {
                             imageService.setImageToDataBase(
