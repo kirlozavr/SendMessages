@@ -5,11 +5,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.sendmessages.DTO.MessageDto;
 import com.example.sendmessages.R;
 
@@ -92,34 +94,62 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
             @NonNull RecycleHolderMessageFrom holder,
             int position
     ) {
+        holder.imageViewFrom.setImageDrawable(null);
+
         MessageDto message = messageList.get(position);
-        holder.textFrom
+        holder
+                .textFrom
                 .setText(message.getMessage());
-        holder.timeFrom
-                .setText(message.getDateTimeToMessages()
-                );
+        holder
+                .timeFrom
+                .setText(message.getDateTimeToMessages());
+
+        if(
+                message.getUriImage() != null
+                && message.getUriImage().length() != 0
+        ) {
+            Glide
+                    .with(layoutInflater.getContext())
+                    .load(message.getUriImage())
+                    .into(holder.imageViewFrom);
+        }
     }
 
     private void messageToWhom(@NonNull RecycleHolderMessageToWhom holder,
                                int position
     ) {
+        holder.imageViewToWhom.setImageDrawable(null);
+
         MessageDto message = messageList.get(position);
-        holder.textToWhom
+        holder
+                .textToWhom
                 .setText(message.getMessage());
-        holder.timeToWhom
-                .setText(message.getDateTimeToMessages()
-                );
+        holder
+                .timeToWhom
+                .setText(message.getDateTimeToMessages());
+        if(
+                message.getUriImage() != null
+                && message.getUriImage().length() != 0
+        ) {
+
+            Glide
+                    .with(layoutInflater.getContext())
+                    .load(message.getUriImage())
+                    .into(holder.imageViewToWhom);
+        }
     }
 
     public class RecycleHolderMessageFrom extends RecyclerView.ViewHolder {
 
         private TextView textFrom;
         private TextView timeFrom;
+        private ImageView imageViewFrom;
 
         public RecycleHolderMessageFrom(@NonNull View itemView) {
             super(itemView);
             textFrom = itemView.findViewById(R.id.textFrom);
             timeFrom = itemView.findViewById(R.id.timeFrom);
+            imageViewFrom = itemView.findViewById(R.id.imageViewMessageFrom);
         }
     }
 
@@ -127,11 +157,13 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
 
         private TextView textToWhom;
         private TextView timeToWhom;
+        private ImageView imageViewToWhom;
 
         public RecycleHolderMessageToWhom(@NonNull View itemView) {
             super(itemView);
             textToWhom = itemView.findViewById(R.id.textToWhom);
             timeToWhom = itemView.findViewById(R.id.timeToWhom);
+            imageViewToWhom = itemView.findViewById(R.id.imageViewMessageToWhom);
         }
     }
 }
