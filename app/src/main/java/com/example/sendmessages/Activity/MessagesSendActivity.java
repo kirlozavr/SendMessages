@@ -5,6 +5,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,26 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sendmessages.Adapters.RecyclerViewAdapterMessages;
-import com.example.sendmessages.DTO.MessageDto;
-import com.example.sendmessages.Entity.ChatsEntity;
-import com.example.sendmessages.Entity.MessageEntity;
 import com.example.sendmessages.General.Data;
-import com.example.sendmessages.General.DataBase;
-import com.example.sendmessages.General.DateFormat;
-import com.example.sendmessages.General.NetworkIsConnected;
-import com.example.sendmessages.Mapping.MessageMapper;
 import com.example.sendmessages.R;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
+import com.example.sendmessages.Sevice.ImageService;
+import com.example.sendmessages.Sevice.MessageService;
+import com.example.sendmessages.Sevice.NetworkIsConnectedService;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Класс отвечает за отображение переписки конкретных пользователей
@@ -43,22 +33,24 @@ import java.util.List;
  * на наличие уже существующего чата между пользователями,
  * если чата еще нет, то создается новый, но не записывается в БД.
  * Запись происходит тогда, когда пользователь отправляет сообщение.
- * **/
+ **/
 
 public class MessagesSendActivity extends AppCompatActivity {
 
+    private MessageService messageService;
     private String usernameFrom, usernameToWhom;
     private Toolbar toolbar;
     private FirebaseFirestore db;
-    private MessageMapper mapper = new MessageMapper();
+    private ImageService imageService;
     private EditText editText;
     private Button button;
+    private ProgressBar progressBar;
+    private ImageView imageView;
+    private ImageButton imageButton, clearImageButton;
+    private FrameLayout frameLayout;
     private ConstraintLayout constraintLayout;
-    private MessageEntity messageEntity;
-    private ChatsEntity chatsEntityFrom, chatsEntityToWhom;
     private RecyclerViewAdapterMessages adapterMessages;
     private RecyclerView recyclerView;
-    private boolean boolChatExist = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,25 +58,67 @@ public class MessagesSendActivity extends AppCompatActivity {
         setContentView(R.layout.messages_send_layout);
 
         initialization();
+        onClick();
+    }
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addMessagesToDataBase();
-            }
-        });
+    private void onClick() {
+
+        button.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(imageView.getDrawable() == null){
+                            messageService.addMessagesToDataBase();
+                        } else {
+                            imageService.setImageToDataBase(
+                                    messageService,
+                                    frameLayout,
+                                    imageView,
+                                    progressBar
+                            );
+                        }
+                    }
+                });
+
+        imageButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        imageService = new ImageService(
+                                getActivityResultRegistry(),
+                                imageView,
+                                frameLayout
+                        );
+                        imageService.launch();
+                    }
+                });
+
+        clearImageButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        imageService.clearImageView(imageView, frameLayout);
+                    }
+                }
+        );
     }
 
     private void initialization() {
         try {
-            db = FirebaseFirestore.getInstance();
             initView();
             usernameToWhom = getIntent().getStringExtra("username");
             usernameFrom = Data
                     .getStringPreferences(this, Data.USERNAME);
             getSupportActionBar().setTitle("Чат с " + usernameToWhom);
             initRecyclerView();
-            getChat();
+            messageService = new MessageService();
+            messageService
+                    .setAdapterMessages(adapterMessages)
+                    .setEditText(editText)
+                    .setImageView(imageView)
+                    .setUsernameFrom(usernameFrom)
+                    .setUsernameToWhom(usernameToWhom);
+            messageService.getChat();
         } catch (Exception e) {
             Log.i("Ошибка", "Ошибка initializationMessagesSend: " + e.getMessage());
         }
@@ -92,7 +126,12 @@ public class MessagesSendActivity extends AppCompatActivity {
 
     private void initView() {
         constraintLayout = findViewById(R.id.constraintLayoutMessagesActivity);
+        progressBar = findViewById(R.id.progressBarImage);
+        frameLayout = findViewById(R.id.frameLayout2);
         editText = findViewById(R.id.editTextSendMessages);
+        imageView = findViewById(R.id.imageViewMessage);
+        clearImageButton = findViewById(R.id.clearImageMessage);
+        imageButton = findViewById(R.id.imageButtonMessage);
         button = findViewById(R.id.buttonSendMessages);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -112,229 +151,25 @@ public class MessagesSendActivity extends AppCompatActivity {
     }
 
     /**
-     *  Проверка на подключение к сети интернет
-     * **/
+     * Проверка на подключение к сети интернет
+     **/
 
     public void isConnected() {
-        NetworkIsConnected networkIsConnected =
+        NetworkIsConnectedService networkIsConnectedService =
                 new ViewModelProvider(MessagesSendActivity.this)
-                        .get(NetworkIsConnected.class);
-        networkIsConnected
+                        .get(NetworkIsConnectedService.class);
+
+        networkIsConnectedService
                 .getConnected()
                 .observe(MessagesSendActivity.this, connected -> {
-                    networkIsConnected.setSnackbar(
+                    networkIsConnectedService.setSnackbar(
                             constraintLayout,
-                            NetworkIsConnected.NO_CONNECTED_TO_NETWORK,
-                            NetworkIsConnected.VISIBLE_LONG
+                            NetworkIsConnectedService.NO_CONNECTED_TO_NETWORK,
+                            NetworkIsConnectedService.VISIBLE_LONG
                     );
                 });
     }
 
-    /**
-     *  Создание сущности сообщения
-     * **/
-
-    private void setMessagesEntity() {
-        messageEntity = new MessageEntity(
-                editText.getText().toString(),
-                DateFormat.getFormatToDataBase().format(ZonedDateTime.now()),
-                usernameFrom
-        );
-    }
-
-    /**
-     * Создание сущности чата, создается 2 сущности,
-     * чтобы создать 2 одинаковые записи в бд с одинаковым id.
-     * Чат А с В по id:1 и чат В с А по id:1
-     * **/
-
-    private void setChatsEntity() {
-        chatsEntityFrom = new ChatsEntity(
-                usernameToWhom
-        );
-        chatsEntityToWhom = new ChatsEntity(
-                chatsEntityFrom.getIdChats(),
-                usernameFrom
-        );
-    }
-
-    /**
-     *  Добавление чатов в БД
-     * **/
-
-    private void addChatsToDataBase() {
-
-        chatsEntityFrom = new ChatsEntity(
-                chatsEntityFrom.getIdChats(),
-                chatsEntityFrom.getUsernameToWhom(),
-                messageEntity.getMessage(),
-                messageEntity.getDateTimeToDataBase()
-        );
-        chatsEntityToWhom = new ChatsEntity(
-                chatsEntityToWhom.getIdChats(),
-                chatsEntityToWhom.getUsernameToWhom(),
-                messageEntity.getMessage(),
-                messageEntity.getDateTimeToDataBase()
-        );
-
-        db
-                .collection(DataBase.CHATS_DB)
-                .document(usernameFrom)
-                .collection(DataBase.ListTag.COLLECTIONS_CHATS_TAG)
-                .document(usernameToWhom)
-                .set(chatsEntityFrom);
-        db
-                .collection(DataBase.CHATS_DB)
-                .document(usernameToWhom)
-                .collection(DataBase.ListTag.COLLECTIONS_CHATS_TAG)
-                .document(usernameFrom)
-                .set(chatsEntityToWhom);
-        boolChatExist = false;
-    }
-
-    /**
-     *  Получение чата с конкретным пользователем из БД,
-     *  если его еще нет, то создается новый.
-     *  И вывод всех сообщений между пользователями.
-     * **/
-
-    private void getChat() {
-        db
-                .collection(DataBase.CHATS_DB)
-                .document(usernameFrom)
-                .collection(DataBase.ListTag.COLLECTIONS_CHATS_TAG)
-                .document(usernameToWhom)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            chatsEntityFrom = documentSnapshot
-                                    .toObject(ChatsEntity.class);
-                            boolChatExist = true;
-                        } else {
-                            setChatsEntity();
-                        }
-                        getMessagesFromDataBase();
-                    }
-                });
-    }
-
-    /**
-     *  Обновление чата в БД, происходит перезапись значений:
-     *  Последнее сообщение, время отправки сообщения.
-     * **/
-
-    public void updateChats() {
-
-        db
-                .collection(DataBase.CHATS_DB)
-                .document(usernameFrom)
-                .collection(DataBase.ListTag.COLLECTIONS_CHATS_TAG)
-                .document(usernameToWhom)
-                .update(
-                        "lastMessage", messageEntity.getMessage(),
-                        "timeMessageToDataBase", messageEntity.getDateTimeToDataBase()
-                );
-        db
-                .collection(DataBase.CHATS_DB)
-                .document(usernameToWhom)
-                .collection(DataBase.ListTag.COLLECTIONS_CHATS_TAG)
-                .document(usernameFrom)
-                .update(
-                        "lastMessage", messageEntity.getMessage(),
-                        "timeMessageToDataBase", messageEntity.getDateTimeToDataBase()
-                );
-        boolChatExist = true;
-    }
-
-    /**
-     *  Запись сообщения в БД.
-     * **/
-
-    private void addMessagesToDataBase() {
-        if (
-                editText.getText().toString() != null
-                        || editText.getText().toString().length() != 0
-        ) {
-            setMessagesEntity();
-            if (!boolChatExist) {
-                addChatsToDataBase();
-            }
-            db
-                    .collection(DataBase.MESSAGES_DB)
-                    .document(chatsEntityFrom.getIdChats().toString())
-                    .collection(DataBase.ListTag.COLLECTIONS_MESSAGES_TAG)
-                    .document(messageEntity.getDateTimeToDataBase())
-                    .set(messageEntity);
-            editText
-                    .getText()
-                    .clear();
-            updateChats();
-        }
-    }
-
-    /**
-     *  Получение списка всех сообщений из БД.
-     * **/
-
-    private void getMessagesFromDataBase() {
-        List<MessageDto> messageList = new ArrayList<MessageDto>();
-        LocalDate localDate = LocalDate.now();
-        try {
-            db
-                    .collection(DataBase.MESSAGES_DB)
-                    .document(chatsEntityFrom.getIdChats().toString())
-                    .collection(DataBase.ListTag.COLLECTIONS_MESSAGES_TAG)
-                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                        @Override
-                        public void onEvent(
-                                @Nullable QuerySnapshot value,
-                                @Nullable FirebaseFirestoreException error
-                        ) {
-                            adapterMessages.deleteList();
-                            for (DocumentSnapshot ds : value.getDocuments()) {
-
-                                /**
-                                 *  Проверка на существование даты, если ее нет,
-                                 *  то конвертация через маппер не осуществляется.
-                                 * **/
-
-                                if (ds.toObject(MessageEntity.class).getDateTimeToDataBase() != null) {
-
-                                    ZonedDateTime zonedDateTime =
-                                            ZonedDateTime.parse(
-                                                    ds.toObject(MessageEntity.class).getDateTimeToDataBase(),
-                                                    DateFormat.getFormatFromDataBase()
-                                            );
-
-                                    /**
-                                     *  Проверка на сегодняшнюю дату,
-                                     *  если дата отправки сообщения совпадает с сегодняшней,
-                                     *  то выводится только время, если нет,
-                                     *  то дополнительно выводится год, месяц и день.
-                                     * **/
-
-                                    if (zonedDateTime.toLocalDate().isEqual(localDate)) {
-                                        mapper.setIsToday(false);
-                                    } else {
-                                        mapper.setIsToday(true);
-                                    }
-
-                                    MessageDto message = mapper
-                                            .getEntityToDto(ds.toObject(MessageEntity.class));
-                                    messageList.add(message);
-                                }
-                                adapterMessages.setList(messageList);
-                            }
-                        }
-                    });
-
-        } catch (Exception e) {
-
-        }
-
-    }
 }
 
 
