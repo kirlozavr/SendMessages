@@ -1,4 +1,4 @@
-package com.example.sendmessages.General;
+package com.example.sendmessages.Sevice;
 
 import android.app.Application;
 import android.content.Context;
@@ -23,14 +23,14 @@ import java.util.Set;
  *  Класс отвечает за проверку подключения к сети интернет.
  * **/
 
-public class NetworkIsConnected extends AndroidViewModel {
+public class NetworkIsConnectedService extends AndroidViewModel {
 
     private final MutableLiveData<Boolean> mConnected = new MutableLiveData<>();
     public static final int VISIBLE_LONG = Snackbar.LENGTH_LONG;
     public static final int VISIBLE_SHORT = Snackbar.LENGTH_SHORT;
     public static final String NO_CONNECTED_TO_NETWORK = "Нет подключения к интернету";
 
-    public NetworkIsConnected(@NonNull Application application) {
+    public NetworkIsConnectedService(@NonNull Application application) {
         super(application);
 
         ConnectivityManager connectivityManager =
