@@ -24,13 +24,15 @@ public class MessageMapper implements Mapping<MessageEntity, MessageDto> {
             return new MessageDto(
                     entity.getMessage(),
                     DateFormat.getFormatToDateAndTime().format(zonedDateTime),
-                    entity.getUsernameFrom()
+                    entity.getUsernameFrom(),
+                    entity.getUriImage()
             );
         } else {
             return new MessageDto(
                     entity.getMessage(),
                     DateFormat.getFormatToTime().format(zonedDateTime),
-                    entity.getUsernameFrom()
+                    entity.getUsernameFrom(),
+                    entity.getUriImage()
             );
         }
     }

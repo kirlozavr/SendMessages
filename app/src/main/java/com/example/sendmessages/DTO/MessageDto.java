@@ -5,11 +5,21 @@ public class MessageDto {
     private String message;
     private String dateTimeToMessages;
     private String usernameFrom;
+    private String uriImage;
 
-    public MessageDto(String message, String dateTimeToMessages, String usernameFrom) {
+    public MessageDto(String message, String dateTimeToMessages, String usernameFrom, String uriImage) {
+        this.uriImage = uriImage;
         this.message = message;
         this.dateTimeToMessages = dateTimeToMessages;
         this.usernameFrom = usernameFrom;
+    }
+
+    public String getUriImage() {
+        return uriImage;
+    }
+
+    public void setUriImage(String uriImage) {
+        this.uriImage = uriImage;
     }
 
     public String getMessage() {
