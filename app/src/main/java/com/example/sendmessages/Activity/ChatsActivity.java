@@ -21,7 +21,7 @@ import com.example.sendmessages.Entity.ChatsEntity;
 import com.example.sendmessages.General.Data;
 import com.example.sendmessages.General.DataBase;
 import com.example.sendmessages.General.DateFormat;
-import com.example.sendmessages.General.NetworkIsConnected;
+import com.example.sendmessages.Sevice.NetworkIsConnectedService;
 import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.Mapping.ChatsMapper;
 import com.example.sendmessages.R;
@@ -142,16 +142,16 @@ public class ChatsActivity extends AppCompatActivity {
      *  В этом методе происходит проверка на подключение к сети интернет.
      *  **/
     public void isConnected() {
-        NetworkIsConnected networkIsConnected =
+        NetworkIsConnectedService networkIsConnectedService =
                 new ViewModelProvider(ChatsActivity.this)
-                        .get(NetworkIsConnected.class);
-        networkIsConnected
+                        .get(NetworkIsConnectedService.class);
+        networkIsConnectedService
                 .getConnected()
                 .observe(ChatsActivity.this, connected -> {
-                    networkIsConnected.setSnackbar(
+                    networkIsConnectedService.setSnackbar(
                             constraintLayout,
-                            NetworkIsConnected.NO_CONNECTED_TO_NETWORK,
-                            NetworkIsConnected.VISIBLE_LONG
+                            NetworkIsConnectedService.NO_CONNECTED_TO_NETWORK,
+                            NetworkIsConnectedService.VISIBLE_LONG
                     );
                 });
     }
@@ -161,7 +161,6 @@ public class ChatsActivity extends AppCompatActivity {
      * **/
     private void getChats() {
         List<ChatsDto> chatsList = new ArrayList<ChatsDto>();
-        LocalDate localDate = LocalDate.now();
 
         try {
             db
@@ -174,6 +173,8 @@ public class ChatsActivity extends AppCompatActivity {
                                 @Nullable QuerySnapshot value,
                                 @Nullable FirebaseFirestoreException error
                         ) {
+                            LocalDate localDate = LocalDate.now();
+
                             adapterChats.deleteList();
                             for (DocumentSnapshot ds : value.getDocuments()) {
                                 /**
