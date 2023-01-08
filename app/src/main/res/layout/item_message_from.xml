@@ -8,9 +8,19 @@
     android:layout_marginBottom="4dp"
     android:background="@drawable/messages_background_from"
     android:orientation="horizontal"
-    tools:ignore="MissingConstraints"
-    tools:layout_editor_absoluteX="1dp"
-    tools:layout_editor_absoluteY="1dp">
+    tools:ignore="MissingConstraints">
+
+    <ImageView
+        android:id="@+id/imageViewMessageFrom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="8dp"
+        android:adjustViewBounds="true"
+        android:maxWidth="320dp"
+        android:maxHeight="320dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textFrom"
@@ -26,7 +36,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/timeFrom"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imageViewMessageFrom" />
 
     <TextView
         android:id="@+id/timeFrom"
@@ -38,5 +48,5 @@
         android:maxWidth="86dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imageViewMessageFrom" />
 </androidx.constraintlayout.widget.ConstraintLayout>
