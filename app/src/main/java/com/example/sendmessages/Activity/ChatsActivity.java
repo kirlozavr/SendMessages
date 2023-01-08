@@ -21,10 +21,10 @@ import com.example.sendmessages.Entity.ChatsEntity;
 import com.example.sendmessages.General.Data;
 import com.example.sendmessages.General.DataBase;
 import com.example.sendmessages.General.DateFormat;
-import com.example.sendmessages.Sevice.NetworkIsConnectedService;
 import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.Mapping.ChatsMapper;
 import com.example.sendmessages.R;
+import com.example.sendmessages.Sevice.NetworkIsConnectedService;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -203,6 +203,7 @@ public class ChatsActivity extends AppCompatActivity {
 
                                     ChatsDto chatsDto = mapper
                                             .getEntityToDto(ds.toObject(ChatsEntity.class));
+
                                     chatsList.add(chatsDto);
                                 }
                                 adapterChats.setList(chatsList);
