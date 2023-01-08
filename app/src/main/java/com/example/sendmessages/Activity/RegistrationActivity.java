@@ -20,8 +20,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.sendmessages.Entity.UserEntity;
 import com.example.sendmessages.General.Data;
 import com.example.sendmessages.General.DataBase;
-import com.example.sendmessages.General.NetworkIsConnected;
 import com.example.sendmessages.R;
+import com.example.sendmessages.Sevice.NetworkIsConnectedService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -51,6 +51,10 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registration);
         initialization();
+        onClick();
+    }
+
+    private void onClick(){
 
         buttonRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,16 +116,16 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     public void isConnected() {
-        NetworkIsConnected networkIsConnected =
+        NetworkIsConnectedService networkIsConnectedService =
                 new ViewModelProvider(RegistrationActivity.this)
-                        .get(NetworkIsConnected.class);
-        networkIsConnected
+                        .get(NetworkIsConnectedService.class);
+        networkIsConnectedService
                 .getConnected()
                 .observe(RegistrationActivity.this, connected -> {
-                    networkIsConnected.setSnackbar(
+                    networkIsConnectedService.setSnackbar(
                             constraintLayout,
-                            NetworkIsConnected.NO_CONNECTED_TO_NETWORK,
-                            NetworkIsConnected.VISIBLE_LONG
+                            NetworkIsConnectedService.NO_CONNECTED_TO_NETWORK,
+                            NetworkIsConnectedService.VISIBLE_LONG
                     );
                 });
     }
