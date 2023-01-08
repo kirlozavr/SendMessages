@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayoutItemMessages"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|center_horizontal"
+    android:layout_marginHorizontal="4dp"
+    android:elevation="8dp">
+
+    <ImageButton
+        android:id="@+id/imageButtonMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/ic_baseline_image_24" />
+
+    <EditText
+        android:id="@+id/editTextSendMessages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="6"
+        android:ems="10"
+        android:hint="@string/edit_text_messages"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/buttonSendMessages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Ок" />
+
+</LinearLayout>
