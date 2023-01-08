@@ -59,8 +59,19 @@ public class RecyclerViewAdapterChats
             @SuppressLint("RecyclerView") int position
     ) {
         ChatsDto chatsDto = chatsList.get(position);
+
+        if (
+                chatsDto
+                        .getLastMessage()
+                        .trim()
+                        .length() == 0
+        ) {
+            holder.textLastMessages.setText("Изображение");
+        } else {
+            holder.textLastMessages.setText(chatsDto.getLastMessage());
+        }
+
         holder.textChatsName.setText(chatsDto.getUsernameToWhom());
-        holder.textLastMessages.setText(chatsDto.getLastMessage());
         holder.timeMessage.setText(chatsDto.getTimeMessageToChats());
         holder.itemView.setOnClickListener(
                 new View.OnClickListener() {
