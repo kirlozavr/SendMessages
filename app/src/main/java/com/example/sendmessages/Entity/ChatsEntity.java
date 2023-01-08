@@ -20,7 +20,12 @@ public class ChatsEntity {
         this.usernameToWhom = usernameToWhom;
     }
 
-    public ChatsEntity(Integer idChats, String usernameToWhom, String lastMessage, String timeMessageToDataBase) {
+    public ChatsEntity(
+            Integer idChats,
+            String usernameToWhom,
+            String lastMessage,
+            String timeMessageToDataBase
+    ) {
         this.idChats = idChats;
         this.usernameToWhom = usernameToWhom;
         this.lastMessage = lastMessage;

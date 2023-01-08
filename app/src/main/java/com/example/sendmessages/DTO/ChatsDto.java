@@ -4,7 +4,11 @@ public class ChatsDto {
 
     private String usernameToWhom, lastMessage, timeMessageToChats;
 
-    public ChatsDto(String usernameToWhom, String lastMessage, String timeMessageToChats) {
+    public ChatsDto(
+            String usernameToWhom,
+            String lastMessage,
+            String timeMessageToChats
+    ) {
         this.usernameToWhom = usernameToWhom;
         this.lastMessage = lastMessage;
         this.timeMessageToChats = timeMessageToChats;
