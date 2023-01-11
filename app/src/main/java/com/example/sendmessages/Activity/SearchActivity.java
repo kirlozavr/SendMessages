@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sendmessages.Adapters.RecyclerViewAdapterSearch;
 import com.example.sendmessages.DTO.SearchDto;
 import com.example.sendmessages.Entity.UserEntity;
-import com.example.sendmessages.General.DataBase;
+import com.example.sendmessages.Common.DataBase;
 import com.example.sendmessages.Sevice.NetworkIsConnectedService;
 import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.Mapping.SearchMapper;

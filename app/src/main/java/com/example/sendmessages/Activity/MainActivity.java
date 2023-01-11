@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.sendmessages.General.Data;
+import com.example.sendmessages.Common.Data;
 import com.example.sendmessages.R;
 
 /**

@@ -18,8 +18,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.sendmessages.Entity.UserEntity;
-import com.example.sendmessages.General.Data;
-import com.example.sendmessages.General.DataBase;
+import com.example.sendmessages.Common.Data;
+import com.example.sendmessages.Common.DataBase;
 import com.example.sendmessages.R;
 import com.example.sendmessages.Sevice.NetworkIsConnectedService;
 import com.google.android.gms.tasks.OnCompleteListener;

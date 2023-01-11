@@ -1,4 +1,4 @@
-package com.example.sendmessages.General;
+package com.example.sendmessages.Common;
 
 public class DataBase {
     public static final String NAME_DB = "User";

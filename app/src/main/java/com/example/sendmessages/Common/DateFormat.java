@@ -1,4 +1,4 @@
-package com.example.sendmessages.General;
+package com.example.sendmessages.Common;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;

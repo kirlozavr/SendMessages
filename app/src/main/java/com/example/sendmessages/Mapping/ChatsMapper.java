@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.example.sendmessages.DTO.ChatsDto;
 import com.example.sendmessages.Entity.ChatsEntity;
-import com.example.sendmessages.General.DateFormat;
+import com.example.sendmessages.Common.DateFormat;
 import com.example.sendmessages.Interface.Mapping;
 
 import java.time.ZonedDateTime;

@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sendmessages.Adapters.RecyclerViewAdapterMessages;
-import com.example.sendmessages.General.Data;
+import com.example.sendmessages.Common.Data;
 import com.example.sendmessages.R;
 import com.example.sendmessages.Sevice.ImageService;
 import com.example.sendmessages.Sevice.MessageService;

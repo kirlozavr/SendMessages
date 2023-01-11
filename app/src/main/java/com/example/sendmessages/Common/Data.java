@@ -1,4 +1,4 @@
-package com.example.sendmessages.General;
+package com.example.sendmessages.Common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
