@@ -10,6 +10,7 @@ import android.os.Build;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
@@ -20,8 +21,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *  Класс отвечает за проверку подключения к сети интернет.
- * **/
+ * Класс отвечает за проверку подключения к сети интернет.
+ **/
 
 public class NetworkIsConnectedService extends AndroidViewModel {
 
@@ -36,7 +37,10 @@ public class NetworkIsConnectedService extends AndroidViewModel {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) application
                         .getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (
+                connectivityManager == null
+                        || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP
+        ) {
             mConnected.setValue(true);
             return;
         }
@@ -98,13 +102,30 @@ public class NetworkIsConnectedService extends AndroidViewModel {
 
     /**
      * Вывод уведомления об отсутствии подключения к сети интернет.
-     * **/
+     **/
 
     public void setSnackbar(View view, String message, int flag) {
         Snackbar
                 .make(view, message, flag)
                 .setBackgroundTint(getApplication().getResources().getColor(R.color.color_snackbar_not_connected, null))
                 .show();
+    }
+
+    public void isConnected(
+            NetworkIsConnectedService networkIsConnectedService,
+            AppCompatActivity activity,
+            View view
+    ) {
+
+        networkIsConnectedService
+                .getConnected()
+                .observe(activity, connected -> {
+                    networkIsConnectedService.setSnackbar(
+                            view,
+                            NetworkIsConnectedService.NO_CONNECTED_TO_NETWORK,
+                            NetworkIsConnectedService.VISIBLE_LONG
+                    );
+                });
     }
 
 }
