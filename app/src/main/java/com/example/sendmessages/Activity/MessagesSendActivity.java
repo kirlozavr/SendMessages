@@ -142,6 +142,7 @@ public class MessagesSendActivity extends AppCompatActivity {
         );
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(false);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapterMessages);
