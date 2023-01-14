@@ -13,13 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sendmessages.Adapters.RecyclerViewAdapterSearch;
+import com.example.sendmessages.Common.DataBase;
 import com.example.sendmessages.DTO.SearchDto;
 import com.example.sendmessages.Entity.UserEntity;
-import com.example.sendmessages.Common.DataBase;
-import com.example.sendmessages.Sevice.NetworkIsConnectedService;
 import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.Mapping.SearchMapper;
 import com.example.sendmessages.R;
+import com.example.sendmessages.Sevice.NetworkIsConnectedService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,8 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  Класс отвечает за поиск пользователей, чтобы начать с ними чат.
- * **/
+ * Класс отвечает за поиск пользователей, чтобы начать с ними чат.
+ **/
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -41,6 +41,7 @@ public class SearchActivity extends AppCompatActivity {
     private SearchMapper mapper = new SearchMapper();
     private RecyclerView recyclerView;
     private RecyclerViewAdapterSearch adapterSearch;
+    private static final String QUERY = "query";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,30 +50,65 @@ public class SearchActivity extends AppCompatActivity {
         initialization();
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(
+                QUERY,
+                searchView.getQuery().toString()
+        );
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        searchView.setQuery(
+                savedInstanceState.getCharSequence(QUERY),
+                false
+        );
+    }
+
     private void initialization() {
         constraintLayout = findViewById(R.id.constraintLayoutSearchLayout);
         firestore = FirebaseFirestore.getInstance();
         searchView = findViewById(R.id.searchView);
         searchView.setIconifiedByDefault(false);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                search(query);
-                return false;
-            }
+        searchView.setOnQueryTextListener(
+                new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        search(query);
+                        return false;
+                    }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.length() == 0 || newText.isEmpty()) {
-                    adapterSearch.deleteList();
-                } else {
-                    search(newText);
-                }
-                return false;
-            }
-        });
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        if (newText.length() == 0 || newText.isEmpty()) {
+                            adapterSearch.deleteList();
+                        } else {
+                            search(newText);
+                        }
+                        return false;
+                    }
+                });
+
         initRecycler();
-        isConnected();
+
+        /**
+         * Проверка на подключение к сети интернет
+         **/
+
+        NetworkIsConnectedService networkIsConnectedService =
+                new ViewModelProvider(SearchActivity.this)
+                        .get(NetworkIsConnectedService.class);
+
+        networkIsConnectedService.isConnected(
+                networkIsConnectedService,
+                SearchActivity.this,
+                constraintLayout
+        );
     }
 
     private void initRecycler() {
@@ -92,27 +128,8 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     /**
-     * Проверка на подключение к сети интернет.
-     * **/
-
-    public void isConnected() {
-        NetworkIsConnectedService networkIsConnectedService =
-                new ViewModelProvider(SearchActivity.this)
-                        .get(NetworkIsConnectedService.class);
-        networkIsConnectedService
-                .getConnected()
-                .observe(SearchActivity.this, connected -> {
-                    networkIsConnectedService.setSnackbar(
-                            constraintLayout,
-                            NetworkIsConnectedService.NO_CONNECTED_TO_NETWORK,
-                            NetworkIsConnectedService.VISIBLE_LONG
-                    );
-                });
-    }
-
-    /**
-     *  Поиск пользователя в БД по введенному логину
-     * **/
+     * Поиск пользователя в БД по введенному логину
+     **/
 
     private void search(String username) {
 

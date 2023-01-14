@@ -3,6 +3,7 @@ package com.example.sendmessages.Activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -16,11 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sendmessages.Adapters.RecyclerViewAdapterChats;
-import com.example.sendmessages.DTO.ChatsDto;
-import com.example.sendmessages.Entity.ChatsEntity;
 import com.example.sendmessages.Common.Data;
 import com.example.sendmessages.Common.DataBase;
 import com.example.sendmessages.Common.DateFormat;
+import com.example.sendmessages.DTO.ChatsDto;
+import com.example.sendmessages.Entity.ChatsEntity;
 import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.Mapping.ChatsMapper;
 import com.example.sendmessages.R;
@@ -37,8 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  Класс отвечает за представление чатов конкретного пользователя
- *  **/
+ * Класс отвечает за представление чатов конкретного пользователя
+ **/
 
 public class ChatsActivity extends AppCompatActivity {
 
@@ -49,6 +50,7 @@ public class ChatsActivity extends AppCompatActivity {
     private RecyclerViewAdapterChats adapterChats;
     private FirebaseFirestore db;
     private ChatsMapper mapper = new ChatsMapper();
+    private static final String USERNAME_FROM = "usernameFromChats";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +61,22 @@ public class ChatsActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        /**
-         *  Удалаются временные данные необходимые только во время работы приложения
-         *  **/
-        Data.removePreferences(this, Data.USERNAME);
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(
+                USERNAME_FROM,
+                usernameFrom
+        );
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        usernameFrom = savedInstanceState
+                .getString(USERNAME_FROM);
+        Log.i("папа", usernameFrom);
     }
 
     @SuppressLint("ResourceAsColor")
@@ -110,16 +122,35 @@ public class ChatsActivity extends AppCompatActivity {
         constraintLayout = findViewById(R.id.constraintLayoutMainActivity);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        usernameFrom = Data
-                .getStringPreferences(this, Data.USERNAME);
 
-        getSupportActionBar().setTitle(
-                "Добро пожаловать " +
-                        usernameFrom.substring(0, 1).toUpperCase() +
-                        usernameFrom.substring(1)
-        );
+        if (usernameFrom == null) {
+            usernameFrom = Data
+                    .getStringPreferences(this, Data.USERNAME);
+        }
+
+        if (usernameFrom.length() != 0) {
+            getSupportActionBar()
+                    .setTitle(
+                            "Добро пожаловать " +
+                                    usernameFrom.substring(0, 1).toUpperCase() +
+                                    usernameFrom.substring(1)
+                    );
+        }
         initRecycler();
-        isConnected();
+
+        /**
+         * Проверка на подключение к сети интернет
+         **/
+
+        NetworkIsConnectedService networkIsConnectedService =
+                new ViewModelProvider(ChatsActivity.this)
+                        .get(NetworkIsConnectedService.class);
+
+        networkIsConnectedService.isConnected(
+                networkIsConnectedService,
+                ChatsActivity.this,
+                constraintLayout
+        );
     }
 
     public void initRecycler() {
@@ -139,26 +170,8 @@ public class ChatsActivity extends AppCompatActivity {
     }
 
     /**
-     *  В этом методе происходит проверка на подключение к сети интернет.
-     *  **/
-    public void isConnected() {
-        NetworkIsConnectedService networkIsConnectedService =
-                new ViewModelProvider(ChatsActivity.this)
-                        .get(NetworkIsConnectedService.class);
-        networkIsConnectedService
-                .getConnected()
-                .observe(ChatsActivity.this, connected -> {
-                    networkIsConnectedService.setSnackbar(
-                            constraintLayout,
-                            NetworkIsConnectedService.NO_CONNECTED_TO_NETWORK,
-                            NetworkIsConnectedService.VISIBLE_LONG
-                    );
-                });
-    }
-
-    /**
      * В этом методе происходит получение списка всех чатом пользователя и вывод их на экран.
-     * **/
+     **/
     private void getChats() {
         List<ChatsDto> chatsList = new ArrayList<ChatsDto>();
 

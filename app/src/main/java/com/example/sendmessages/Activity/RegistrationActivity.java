@@ -17,9 +17,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.sendmessages.Entity.UserEntity;
 import com.example.sendmessages.Common.Data;
 import com.example.sendmessages.Common.DataBase;
+import com.example.sendmessages.Entity.UserEntity;
 import com.example.sendmessages.R;
 import com.example.sendmessages.Sevice.NetworkIsConnectedService;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -54,7 +54,7 @@ public class RegistrationActivity extends AppCompatActivity {
         onClick();
     }
 
-    private void onClick(){
+    private void onClick() {
 
         buttonRegistration.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +97,19 @@ public class RegistrationActivity extends AppCompatActivity {
             initView();
             db = FirebaseFirestore.getInstance();
 
-            isConnected();
+            /**
+             * Проверка на подключение к сети интернет
+             **/
+
+            NetworkIsConnectedService networkIsConnectedService =
+                    new ViewModelProvider(RegistrationActivity.this)
+                            .get(NetworkIsConnectedService.class);
+
+            networkIsConnectedService.isConnected(
+                    networkIsConnectedService,
+                    RegistrationActivity.this,
+                    constraintLayout
+            );
 
         } catch (Exception e) {
             Log.i("Ошибка", "Ошибка initialization Registration: " + e.getMessage());
@@ -113,21 +125,6 @@ public class RegistrationActivity extends AppCompatActivity {
         buttonRegistration.setText(R.string.buttonRegistration_false);
         textViewRegistration.setText(R.string.textViewRegistration_false);
         checkBox = findViewById(R.id.checkBoxRegistration);
-    }
-
-    public void isConnected() {
-        NetworkIsConnectedService networkIsConnectedService =
-                new ViewModelProvider(RegistrationActivity.this)
-                        .get(NetworkIsConnectedService.class);
-        networkIsConnectedService
-                .getConnected()
-                .observe(RegistrationActivity.this, connected -> {
-                    networkIsConnectedService.setSnackbar(
-                            constraintLayout,
-                            NetworkIsConnectedService.NO_CONNECTED_TO_NETWORK,
-                            NetworkIsConnectedService.VISIBLE_LONG
-                    );
-                });
     }
 
     private void buttonStatus() {
@@ -226,7 +223,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     /**
      * Запуск ChatsActivity и закрытие нынещнего активити
-     * **/
+     **/
 
     private void runStartActivity() {
         /**

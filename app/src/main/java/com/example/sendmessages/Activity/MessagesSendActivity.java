@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -47,6 +48,8 @@ public class MessagesSendActivity extends AppCompatActivity {
     private ConstraintLayout constraintLayout;
     private RecyclerViewAdapterMessages adapterMessages;
     private RecyclerView recyclerView;
+    private static final String TEXT_VIEW = "textMessage";
+    private static final String USERNAME_TO_WHOM = "usernameToWhom";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +58,34 @@ public class MessagesSendActivity extends AppCompatActivity {
 
         initialization();
         onClick();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(
+                TEXT_VIEW,
+                editText.getText().toString()
+        );
+        outState.putString(
+                USERNAME_TO_WHOM,
+                usernameToWhom
+        );
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        usernameToWhom = savedInstanceState.getString(USERNAME_TO_WHOM);
+        editText.setText(
+                savedInstanceState
+                        .getString(TEXT_VIEW)
+        );
+        editText.setSelection(
+                editText.getText().length()
+        );
     }
 
     private void onClick() {
@@ -131,7 +162,20 @@ public class MessagesSendActivity extends AppCompatActivity {
         sendMess = findViewById(R.id.buttonSendMessages);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        isConnected();
+
+        /**
+         * Проверка на подключение к сети интернет
+         **/
+
+        NetworkIsConnectedService networkIsConnectedService =
+                new ViewModelProvider(MessagesSendActivity.this)
+                        .get(NetworkIsConnectedService.class);
+
+        networkIsConnectedService.isConnected(
+                networkIsConnectedService,
+                MessagesSendActivity.this,
+                constraintLayout
+        );
     }
 
     private void initRecyclerView() {
@@ -146,26 +190,6 @@ public class MessagesSendActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapterMessages);
-    }
-
-    /**
-     * Проверка на подключение к сети интернет
-     **/
-
-    public void isConnected() {
-        NetworkIsConnectedService networkIsConnectedService =
-                new ViewModelProvider(MessagesSendActivity.this)
-                        .get(NetworkIsConnectedService.class);
-
-        networkIsConnectedService
-                .getConnected()
-                .observe(MessagesSendActivity.this, connected -> {
-                    networkIsConnectedService.setSnackbar(
-                            constraintLayout,
-                            NetworkIsConnectedService.NO_CONNECTED_TO_NETWORK,
-                            NetworkIsConnectedService.VISIBLE_LONG
-                    );
-                });
     }
 
 }
