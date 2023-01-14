@@ -3,7 +3,6 @@ package com.example.sendmessages.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -41,10 +40,9 @@ public class MessagesSendActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ImageService imageService;
     private EditText editText;
-    private Button button;
     private ProgressBar progressBar;
     private ImageView imageView;
-    private ImageButton imageButton, clearImageButton;
+    private ImageButton getGallery, clearImageButton, sendMess;
     private FrameLayout frameLayout;
     private ConstraintLayout constraintLayout;
     private RecyclerViewAdapterMessages adapterMessages;
@@ -61,7 +59,7 @@ public class MessagesSendActivity extends AppCompatActivity {
 
     private void onClick() {
 
-        button.setOnClickListener(
+        sendMess.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -78,7 +76,7 @@ public class MessagesSendActivity extends AppCompatActivity {
                     }
                 });
 
-        imageButton.setOnClickListener(
+        getGallery.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -129,8 +127,8 @@ public class MessagesSendActivity extends AppCompatActivity {
         editText = findViewById(R.id.editTextSendMessages);
         imageView = findViewById(R.id.imageViewMessage);
         clearImageButton = findViewById(R.id.clearImageMessage);
-        imageButton = findViewById(R.id.imageButtonMessage);
-        button = findViewById(R.id.buttonSendMessages);
+        getGallery = findViewById(R.id.imageButtonMessage);
+        sendMess = findViewById(R.id.buttonSendMessages);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         isConnected();
@@ -143,6 +141,7 @@ public class MessagesSendActivity extends AppCompatActivity {
                 Data.getSharedPreferences(this).getString(Data.USERNAME, "")
         );
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setStackFromEnd(true);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapterMessages);
