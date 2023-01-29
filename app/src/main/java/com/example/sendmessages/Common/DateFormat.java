@@ -3,6 +3,9 @@ package com.example.sendmessages.Common;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+/**
+ * Класс отвечает за хранение формата дат для класса DateTimeFormatter
+ **/
 public class DateFormat {
 
     public static DateTimeFormatter getFormatToDataBase() {

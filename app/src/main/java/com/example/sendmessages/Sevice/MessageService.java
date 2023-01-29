@@ -25,6 +25,10 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс отвечает за операции с БД,
+ * в частности прием/отправка сообщений пользователю с которым ведется переписка.
+ **/
 public class MessageService {
 
     private FirebaseFirestore db;
@@ -101,8 +105,12 @@ public class MessageService {
         uriImage = null;
     }
 
+    /**
+     * Метод отвечает за создание сущности сообщения
+     **/
     private boolean setMessagesEntity() {
 
+        /** Проверка на наличие текста в текстовом поле **/
         boolean isExistText =
                 !editText.getText().toString().trim().equals("")
                         && editText.getText().toString().trim().length() != 0;
@@ -128,12 +136,12 @@ public class MessageService {
         }
     }
 
+
     /**
-     * Создание сущности чата, создается 2 сущности,
+     * Метод отвечает за создание сущности чата, создается 2 сущности,
      * чтобы создать 2 одинаковые записи в бд с одинаковым id.
      * Чат А с В по id:1 и чат В с А по id:1
      **/
-
     private void setChatsEntity() {
         chatsEntityFrom = new ChatsEntity(
                 usernameToWhom
@@ -145,9 +153,8 @@ public class MessageService {
     }
 
     /**
-     * Добавление чатов в БД
+     * Метод отвечает за добавление чатов в БД
      **/
-
     private void addChatsToDataBase() {
 
         chatsEntityFrom = new ChatsEntity(
@@ -179,11 +186,10 @@ public class MessageService {
     }
 
     /**
-     * Получение чата с конкретным пользователем из БД,
+     * Метод отвечает за получение чата с конкретным пользователем из БД,
      * если его еще нет, то создается новый.
-     * И вывод всех сообщений между пользователями.
+     * Так же выводит все сообщения между пользователями.
      **/
-
     public void getChat() {
         db
                 .collection(DataBase.CHATS_DB)
@@ -207,10 +213,9 @@ public class MessageService {
     }
 
     /**
-     * Обновление чата в БД, происходит перезапись значений:
+     * Метод отвечает за обновление чата в БД, происходит перезапись значений:
      * Последнее сообщение, время отправки сообщения.
      **/
-
     private void updateChats() {
 
         db
@@ -235,9 +240,8 @@ public class MessageService {
     }
 
     /**
-     * Запись сообщения в БД.
+     * Метод отвечает за запись сообщения в БД.
      **/
-
     public void addMessagesToDataBase() {
 
         boolean booleanMess = setMessagesEntity();
@@ -260,9 +264,8 @@ public class MessageService {
     }
 
     /**
-     * Получение списка всех сообщений из БД.
+     * Метод отвечает за получение списка всех сообщений с пользователем с которым ведется переписка из БД.
      **/
-
     private void getMessagesFromDataBase() {
         List<MessageDto> messageList = new ArrayList<MessageDto>();
 
@@ -285,8 +288,7 @@ public class MessageService {
                                         /**
                                          *  Проверка на существование даты, если ее нет,
                                          *  то конвертация через маппер не осуществляется.
-                                         * **/
-
+                                         **/
 
                                         if (
                                                 ds
@@ -305,7 +307,7 @@ public class MessageService {
                                              *  если дата отправки сообщения совпадает с сегодняшней,
                                              *  то выводится только время, если нет,
                                              *  то дополнительно выводится год, месяц и день.
-                                             * **/
+                                             **/
 
                                             if (zonedDateTime.toLocalDate().isEqual(localDate)) {
                                                 mapper.setIsToday(false);

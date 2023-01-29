@@ -13,6 +13,13 @@ import com.example.sendmessages.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+/**
+ * Класс отвечает за уведомления от сервера
+ *
+ * @see NotificationService
+ * @deprecated
+ */
+@Deprecated
 public class NotificationService extends FirebaseMessagingService {
 
     @Override
@@ -26,7 +33,7 @@ public class NotificationService extends FirebaseMessagingService {
         getNotification(message.getNotification().getTitle(), message.getNotification().getBody());
     }
 
-    private void getNotification(String title, String message){
+    private void getNotification(String title, String message) {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this, "channel")
                         .setSmallIcon(R.drawable.ic_baseline_sms_24)
@@ -37,7 +44,7 @@ public class NotificationService extends FirebaseMessagingService {
         NotificationManager manager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     "channel",
                     "channel",

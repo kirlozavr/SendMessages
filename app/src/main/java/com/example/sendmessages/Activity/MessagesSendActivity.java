@@ -32,6 +32,7 @@ import com.example.sendmessages.Sevice.NetworkIsConnectedService;
  * на наличие уже существующего чата между пользователями,
  * если чата еще нет, то создается новый, но не записывается в БД.
  * Запись происходит тогда, когда пользователь отправляет сообщение.
+ * Все операции с БД выполняет класс MessageService
  **/
 
 public class MessagesSendActivity extends AppCompatActivity {
@@ -48,7 +49,13 @@ public class MessagesSendActivity extends AppCompatActivity {
     private ConstraintLayout constraintLayout;
     private RecyclerViewAdapterMessages adapterMessages;
     private RecyclerView recyclerView;
+    /**
+     * Ключ для сохранения введенного сообщения
+     **/
     private static final String TEXT_VIEW = "textMessage";
+    /**
+     * Ключ для сохранения логина пользователя с которым ведется переписка
+     **/
     private static final String USERNAME_TO_WHOM = "usernameToWhom";
 
     @Override
@@ -60,6 +67,9 @@ public class MessagesSendActivity extends AppCompatActivity {
         onClick();
     }
 
+    /**
+     * Сохранение состояния полей при закрытии или свертывании активити
+     **/
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -74,6 +84,9 @@ public class MessagesSendActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * Запись сохраненных значений в поля
+     **/
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -88,6 +101,9 @@ public class MessagesSendActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * Метод отвечающий за обработку нажатий
+     **/
     private void onClick() {
 
         sendMess.setOnClickListener(

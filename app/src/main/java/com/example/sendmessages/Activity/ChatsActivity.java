@@ -1,9 +1,7 @@
 package com.example.sendmessages.Activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -40,16 +38,21 @@ import java.util.List;
 /**
  * Класс отвечает за представление чатов конкретного пользователя
  **/
-
 public class ChatsActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private ConstraintLayout constraintLayout;
+    /**
+     * Свойство - имя отправителя
+     **/
     private String usernameFrom;
     private RecyclerView recycleView;
     private RecyclerViewAdapterChats adapterChats;
     private FirebaseFirestore db;
     private ChatsMapper mapper = new ChatsMapper();
+    /**
+     * Ключ для сохранения данных при закрытии или свертывании приложения
+     **/
     private static final String USERNAME_FROM = "usernameFromChats";
 
     @Override
@@ -60,26 +63,32 @@ public class ChatsActivity extends AppCompatActivity {
         getChats();
     }
 
+    /**
+     * Сохранение состояния имени отправителя
+     **/
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-
         outState.putString(
                 USERNAME_FROM,
                 usernameFrom
         );
     }
 
+    /**
+     * Запись имени отправителя
+     **/
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
         usernameFrom = savedInstanceState
                 .getString(USERNAME_FROM);
-        Log.i("папа", usernameFrom);
     }
 
-    @SuppressLint("ResourceAsColor")
+    /**
+     * Создание меню
+     **/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main_activity, menu);
@@ -91,13 +100,16 @@ public class ChatsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Обработка нажатия на кнопки меню
+     **/
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search_user: {
                 /**
-                 *  Пользователь нажимает на значок поиска
-                 *  **/
+                 * Пользователь нажимает на значок поиска
+                 **/
                 Intent intent = new Intent(ChatsActivity.this, SearchActivity.class);
                 startActivity(intent);
                 break;
@@ -105,7 +117,7 @@ public class ChatsActivity extends AppCompatActivity {
             case R.id.exit: {
                 /**
                  * Пользователь нажимает на значок выхода из приложения
-                 * **/
+                 **/
                 Data.removePreferences(this, Data.USERNAME);
                 Data.removePreferences(this, Data.SAVE_USERNAME);
                 Intent intent = new Intent(ChatsActivity.this, RegistrationActivity.class);
@@ -193,7 +205,7 @@ public class ChatsActivity extends AppCompatActivity {
                                 /**
                                  * Проверка, если времени нет,
                                  * то не загружает эти данные в маппер.
-                                 * **/
+                                 **/
                                 if (
                                         ds.toObject(ChatsEntity.class).getTimeMessageToDataBase() != null
                                 ) {
@@ -207,7 +219,7 @@ public class ChatsActivity extends AppCompatActivity {
                                      * Проверка на дату,
                                      * если дата сегодняшняя,
                                      * то не показыает год, месяц и день.
-                                     * **/
+                                     **/
                                     if (zonedDateTime.toLocalDate().isEqual(localDate)) {
                                         mapper.setIsToday(false);
                                     } else {
@@ -228,6 +240,11 @@ public class ChatsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Метод запускает активити.
+     *
+     * @param username Принимает имя логина пользователя, который авторизован.
+     **/
     private void runStartActivity(String username) {
         Intent intent = new Intent(ChatsActivity.this, MessagesSendActivity.class);
         intent.putExtra("username", username);

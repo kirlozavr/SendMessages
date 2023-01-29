@@ -41,6 +41,9 @@ public class SearchActivity extends AppCompatActivity {
     private SearchMapper mapper = new SearchMapper();
     private RecyclerView recyclerView;
     private RecyclerViewAdapterSearch adapterSearch;
+    /**
+     * Ключ для сохранения поля запроса при закрытии или свертывании активити
+     **/
     private static final String QUERY = "query";
 
     @Override
@@ -50,6 +53,9 @@ public class SearchActivity extends AppCompatActivity {
         initialization();
     }
 
+    /**
+     * Сохранение состояния поля поиска пользователей
+     **/
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -60,6 +66,9 @@ public class SearchActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * Запись в поле поиска сохраненных значений ввода
+     **/
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -128,9 +137,10 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     /**
-     * Поиск пользователя в БД по введенному логину
+     * Метод поиска пользователя в БД по введенному логину
+     *
+     * @param username Параметр принимает имя в качестве поискового запроса
      **/
-
     private void search(String username) {
 
         List<SearchDto> list = new ArrayList<SearchDto>();
@@ -154,6 +164,11 @@ public class SearchActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Метода запускает активити.
+     *
+     * @param username Принимает в качестве параметра логин авторизованного аккаунта
+     **/
     private void runStartActivity(String username) {
         Intent intent = new Intent(SearchActivity.this, MessagesSendActivity.class);
         intent.putExtra("username", username);

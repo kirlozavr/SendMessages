@@ -28,6 +28,10 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.time.ZonedDateTime;
 
+/**
+ * Класс отвечает за получения доступа к галерее,
+ * сохранении картинки перед отправкой и отправка картинки в БД
+ **/
 public class ImageService {
 
     private static final String KEY = "key";
@@ -58,6 +62,9 @@ public class ImageService {
                 );
     }
 
+    /**
+     * Метод отвечает за конвертацию изображения в массив байтов
+     **/
     private byte[] convertImageToBytesArray(ImageView view) {
         Bitmap bitmap = ((BitmapDrawable) view.getDrawable()).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -65,6 +72,9 @@ public class ImageService {
         return baos.toByteArray();
     }
 
+    /**
+     * Метод отвечает за запись изображения в БД
+     **/
     public void setImageToDataBase(
             MessageService messageService,
             FrameLayout layout,
@@ -72,14 +82,17 @@ public class ImageService {
             ProgressBar progressBar
     ) {
 
+        /** Формируется ссылка на изображение **/
         StorageReference storageReference = FirebaseStorage
                 .getInstance()
                 .getReference()
                 .child("ImageMessage/" + DateFormat.getFormatToDataBase().format(ZonedDateTime.now()) + "_image");
 
+        /** Запись изображения в БД **/
         UploadTask uploadTask = storageReference
                 .putBytes(convertImageToBytesArray(view));
 
+        /** Получение прогресса загрузки изображения в БД **/
         uploadTask
                 .addOnProgressListener(
                         new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -109,12 +122,14 @@ public class ImageService {
                                 if (!task.isSuccessful()) {
                                     throw task.getException();
                                 }
+                                /** Получение ссылки на изображение **/
                                 return storageReference.getDownloadUrl();
                             }
                         }).addOnCompleteListener(
                         new OnCompleteListener<Uri>() {
                             @Override
                             public void onComplete(@NonNull Task<Uri> task) {
+                                /** Запись ссылки на изображение в сущность сообщения **/
                                 if (task.isSuccessful()) {
                                     messageService.setUriImage(task.getResult());
                                     messageService.addMessagesToDataBase();
@@ -123,6 +138,9 @@ public class ImageService {
                         });
     }
 
+    /**
+     * Метод отвечающий за удаление изображения из БД
+     **/
     public void deleteImageFromDataBase(
             @NonNull Uri uriImage
     ) {
@@ -149,6 +167,9 @@ public class ImageService {
                 );
     }
 
+    /**
+     * Метод отвечающий за очищение ImageView который хранит в себе изображение полученное из галереи
+     **/
     public void clearImageView(
             @NonNull ImageView view,
             @NonNull View layout
@@ -158,6 +179,9 @@ public class ImageService {
         layout.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Метод указывающий Android, что необходимо показать только картинки
+     **/
     public void launch() {
         resultLauncher.launch("image/*");
     }

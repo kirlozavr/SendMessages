@@ -47,7 +47,7 @@ public class NetworkIsConnectedService extends AndroidViewModel {
 
         /**
          *  Настраиваем запрос, что мы хотим прослушивать.
-         * **/
+         **/
 
         NetworkRequest networkRequest = new NetworkRequest.Builder()
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
@@ -60,7 +60,7 @@ public class NetworkIsConnectedService extends AndroidViewModel {
          *  Настраиваем обратный вызов,
          *  который будет вызываться системой при наступлении события.
          *  (Отключение / Подключение к сети)
-         * **/
+         **/
 
         ConnectivityManager.NetworkCallback networkCallback =
                 new ConnectivityManager.NetworkCallback() {
@@ -89,7 +89,7 @@ public class NetworkIsConnectedService extends AndroidViewModel {
 
         /**
          * Регистрируем все наши настройки в менеджере.
-         * **/
+         **/
 
         connectivityManager
                 .registerNetworkCallback(networkRequest, networkCallback);
@@ -101,16 +101,20 @@ public class NetworkIsConnectedService extends AndroidViewModel {
     }
 
     /**
-     * Вывод уведомления об отсутствии подключения к сети интернет.
+     * Метод отвечает за вывод уведомления об отсутствии подключения к сети интернет.
      **/
-
     public void setSnackbar(View view, String message, int flag) {
         Snackbar
                 .make(view, message, flag)
-                .setBackgroundTint(getApplication().getResources().getColor(R.color.color_snackbar_not_connected, null))
+                .setBackgroundTint(
+                        getApplication().getResources().getColor(R.color.color_snackbar_not_connected, null)
+                )
                 .show();
     }
 
+    /**
+     * Метод отвечает за проверку подключения к интернету и выводит уведомление
+     **/
     public void isConnected(
             NetworkIsConnectedService networkIsConnectedService,
             AppCompatActivity activity,
