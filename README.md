@@ -17,12 +17,11 @@
 
 Поиск пользователей по логину:
 
-![image](https://user-images.githubusercontent.com/114796369/219942062-438438cb-9b09-4c2f-9bfe-633be78f3e06.png)
-
+![image](https://user-images.githubusercontent.com/114796369/219942286-cc2bb3c4-b399-4f44-bca1-ef22dcf3fb96.png)
 
 Уведомление об отсутствии подключения к интернету:
 
-![image](https://user-images.githubusercontent.com/114796369/219942154-794a4b77-97e4-4fd0-919d-e0791ed39842.png)
+![image](https://user-images.githubusercontent.com/114796369/219942303-e72078f1-d226-4478-a03f-9a1ea4c3d111.png)
 
 
 Через время будет добавленна защита пользовательских данных, как цель самого диплома.
