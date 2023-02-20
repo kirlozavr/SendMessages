@@ -20,7 +20,7 @@ public class Data {
      **/
     public static final String USERNAME = "username";
 
-    public static SharedPreferences getSharedPreferences(Context context) {
+    private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(
                 SETTINGS_PREFERENCES,
                 Context.MODE_PRIVATE
@@ -90,5 +90,10 @@ public class Data {
                 .edit()
                 .remove(key)
                 .apply();
+    }
+
+    public static boolean existsPreferences(Context context, String key){
+        return getSharedPreferences(context)
+                .contains(key);
     }
 }
