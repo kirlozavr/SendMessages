@@ -34,8 +34,10 @@ public class MainActivity extends AppCompatActivity {
     private void isSave() {
         if (
                 Data
-                        .getSharedPreferences(this)
-                        .contains(Data.SAVE_USERNAME)
+                        .existsPreferences(
+                                this,
+                                Data.SAVE_USERNAME
+                        )
         ) {
             Data
                     .putStringPreferences(

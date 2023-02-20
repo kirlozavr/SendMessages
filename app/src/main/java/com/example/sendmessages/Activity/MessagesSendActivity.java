@@ -21,9 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sendmessages.Adapters.RecyclerViewAdapterMessages;
 import com.example.sendmessages.Common.Data;
 import com.example.sendmessages.R;
-import com.example.sendmessages.Sevice.ImageService;
-import com.example.sendmessages.Sevice.MessageService;
-import com.example.sendmessages.Sevice.NetworkIsConnectedService;
+import com.example.sendmessages.Service.ImageService;
+import com.example.sendmessages.Service.MessageService;
+import com.example.sendmessages.Service.NetworkIsConnectedService;
 
 /**
  * Класс отвечает за отображение переписки конкретных пользователей
@@ -198,7 +198,7 @@ public class MessagesSendActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycleViewSendMessages);
         adapterMessages = new RecyclerViewAdapterMessages(
                 MessagesSendActivity.this,
-                Data.getSharedPreferences(this).getString(Data.USERNAME, "")
+                Data.getStringPreferences(this, Data.USERNAME)
         );
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);
