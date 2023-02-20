@@ -1,4 +1,4 @@
-package com.example.sendmessages.Sevice;
+package com.example.sendmessages.Service;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;

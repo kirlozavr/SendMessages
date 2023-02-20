@@ -21,7 +21,7 @@ import com.example.sendmessages.Common.Data;
 import com.example.sendmessages.Common.DataBase;
 import com.example.sendmessages.Entity.UserEntity;
 import com.example.sendmessages.R;
-import com.example.sendmessages.Sevice.NetworkIsConnectedService;
+import com.example.sendmessages.Service.NetworkIsConnectedService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -71,9 +71,17 @@ public class RegistrationActivity extends AppCompatActivity {
                          * Проверяем поля editTextName и editTextPassword на введенные значения
                          **/
                         if (editTextName.getText().toString().trim().equals("")) {
-                            Toast.makeText(RegistrationActivity.this, R.string.Toast_name, Toast.LENGTH_LONG).show();
+                            Toast.makeText(
+                                    RegistrationActivity.this,
+                                    R.string.Toast_name,
+                                    Toast.LENGTH_LONG
+                            ).show();
                         } else if (editTextNumberPassword.getText().toString().trim().equals("")) {
-                            Toast.makeText(RegistrationActivity.this, R.string.Toast_password, Toast.LENGTH_LONG).show();
+                            Toast.makeText(
+                                    RegistrationActivity.this,
+                                    R.string.Toast_password,
+                                    Toast.LENGTH_LONG
+                            ).show();
                         } else {
                             runSearchUserForRegistrationOrInput();
                         }

@@ -19,7 +19,7 @@ import com.example.sendmessages.Entity.UserEntity;
 import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.Mapping.SearchMapper;
 import com.example.sendmessages.R;
-import com.example.sendmessages.Sevice.NetworkIsConnectedService;
+import com.example.sendmessages.Service.NetworkIsConnectedService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;

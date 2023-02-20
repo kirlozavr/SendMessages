@@ -1,4 +1,4 @@
-package com.example.sendmessages.Sevice;
+package com.example.sendmessages.Service;
 
 import android.app.Application;
 import android.content.Context;

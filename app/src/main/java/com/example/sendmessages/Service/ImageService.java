@@ -1,4 +1,4 @@
-package com.example.sendmessages.Sevice;
+package com.example.sendmessages.Service;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;

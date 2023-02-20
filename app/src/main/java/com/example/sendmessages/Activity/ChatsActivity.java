@@ -23,7 +23,7 @@ import com.example.sendmessages.Entity.ChatsEntity;
 import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.Mapping.ChatsMapper;
 import com.example.sendmessages.R;
-import com.example.sendmessages.Sevice.NetworkIsConnectedService;
+import com.example.sendmessages.Service.NetworkIsConnectedService;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
