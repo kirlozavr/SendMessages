@@ -21,11 +21,19 @@ import com.example.sendmessages.Common.Data;
 import com.example.sendmessages.Common.DataBase;
 import com.example.sendmessages.Entity.UserEntity;
 import com.example.sendmessages.R;
+import com.example.sendmessages.Security.KeyGenerator;
+import com.example.sendmessages.Security.PrivateKeys;
+import com.example.sendmessages.Security.PublicKeys;
 import com.example.sendmessages.Service.NetworkIsConnectedService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.math.BigInteger;
+import java.util.List;
+
+import kotlin.Pair;
 
 /**
  * Данный класс отвечает за activity R.layout.registration, в нем происходит регистрация или вход пользователей.
@@ -56,6 +64,12 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.registration);
         initialization();
         onClick();
+
+        KeyGenerator keyGenerator = new KeyGenerator();
+        Pair<PublicKeys, PrivateKeys> keys = keyGenerator.generateKeypair();
+        List<BigInteger> encryptedMessage = keyGenerator.encrypt("Привет", keys.getFirst());
+        String decryptedMessage = keyGenerator.decrypt(encryptedMessage, keys.getSecond());
+        decryptedMessage.trim();
     }
 
     /**
