@@ -22,6 +22,7 @@ import com.example.sendmessages.Common.DataBase;
 import com.example.sendmessages.Entity.UserEntity;
 import com.example.sendmessages.R;
 import com.example.sendmessages.Security.KeyGenerator;
+import com.example.sendmessages.Security.Keys;
 import com.example.sendmessages.Security.PrivateKeys;
 import com.example.sendmessages.Security.PublicKeys;
 import com.example.sendmessages.Service.NetworkIsConnectedService;
@@ -66,10 +67,13 @@ public class RegistrationActivity extends AppCompatActivity {
         onClick();
 
         KeyGenerator keyGenerator = new KeyGenerator();
-        Pair<PublicKeys, PrivateKeys> keys = keyGenerator.generateKeypair();
-        List<BigInteger> encryptedMessage = keyGenerator.encrypt("Привет", keys.getFirst());
-        String decryptedMessage = keyGenerator.decrypt(encryptedMessage, keys.getSecond());
-        decryptedMessage.trim();
+        Pair<PublicKeys, PrivateKeys> pairKeys = keyGenerator.generateKeypair();
+
+        List<BigInteger> encryptedMessage = keyGenerator.encrypt("Привет", pairKeys.getFirst());
+        Keys keys = keyGenerator.conversionKeys(pairKeys.getFirst(), pairKeys.getSecond());
+        Keys newKeys = keyGenerator.convertKeys(keys.getKeyConversion(), keys.getPublicKeys(), keys.getPrivateKeys());
+
+        String decryptedMessage = keyGenerator.decrypt(encryptedMessage, newKeys.getPrivateKeys());
     }
 
     /**

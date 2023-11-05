@@ -63,4 +63,50 @@ class KeyGenerator {
         }
         return decryptedMsg.joinToString("")
     }
+
+    /**
+     * Дополнительно шифрует ключи
+     */
+    fun conversionKeys(publicKey: PublicKeys, privateKey: PrivateKeys): Keys {
+        val keyConversion = KeyConversion(
+            publicFirstKey = kotlin.random.Random.nextLong(8, 100000),
+            publicSecondKey = kotlin.random.Random.nextLong(8, 100000),
+            privateFirstKey = kotlin.random.Random.nextLong(8, 100000),
+            privateSecondKey = kotlin.random.Random.nextLong(8, 100000)
+        )
+        val newPublicKeys = PublicKeys(
+            firstPublicKey = publicKey.firstPublicKey.multiply(BigInteger.valueOf(keyConversion.publicFirstKey)),
+            secondPublicKey = publicKey.secondPublicKey.multiply(BigInteger.valueOf(keyConversion.publicSecondKey))
+        )
+        val newPrivateKeys = PrivateKeys(
+            firstPrivateKey = privateKey.firstPrivateKey.multiply(BigInteger.valueOf(keyConversion.privateFirstKey)),
+            secondPrivateKey = privateKey.secondPrivateKey.multiply(BigInteger.valueOf(keyConversion.privateSecondKey))
+        )
+
+        return Keys(
+            keyConversion = keyConversion,
+            publicKeys = newPublicKeys,
+            privateKeys = newPrivateKeys
+        )
+    }
+
+    /**
+     * Расшифровывает ключи
+     */
+    fun convertKeys(keyConversion: KeyConversion, publicKey: PublicKeys, privateKey: PrivateKeys): Keys {
+        val newPublicKeys = PublicKeys(
+            firstPublicKey = publicKey.firstPublicKey.divide(BigInteger.valueOf(keyConversion.publicFirstKey)),
+            secondPublicKey = publicKey.secondPublicKey.divide(BigInteger.valueOf(keyConversion.publicSecondKey))
+        )
+        val newPrivateKeys = PrivateKeys(
+            firstPrivateKey = privateKey.firstPrivateKey.divide(BigInteger.valueOf(keyConversion.privateFirstKey)),
+            secondPrivateKey = privateKey.secondPrivateKey.divide(BigInteger.valueOf(keyConversion.privateSecondKey))
+        )
+
+        return Keys(
+            keyConversion = keyConversion,
+            publicKeys = newPublicKeys,
+            privateKeys = newPrivateKeys
+        )
+    }
 }
