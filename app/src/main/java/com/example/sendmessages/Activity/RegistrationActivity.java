@@ -26,13 +26,14 @@ import com.example.sendmessages.Security.Keys;
 import com.example.sendmessages.Security.PrivateKeys;
 import com.example.sendmessages.Security.PublicKeys;
 import com.example.sendmessages.Service.NetworkIsConnectedService;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.math.BigInteger;
-import java.util.List;
 
 import kotlin.Pair;
 
@@ -58,6 +59,8 @@ public class RegistrationActivity extends AppCompatActivity {
     private Button buttonRegistration;
     private CheckBox checkBox;
     private FirebaseFirestore db;
+    private KeyGenerator keyGenerator = new KeyGenerator();
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,15 +68,6 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.registration);
         initialization();
         onClick();
-
-        KeyGenerator keyGenerator = new KeyGenerator();
-        Pair<PublicKeys, PrivateKeys> pairKeys = keyGenerator.generateKeypair();
-
-        List<BigInteger> encryptedMessage = keyGenerator.encrypt("Привет", pairKeys.getFirst());
-        Keys keys = keyGenerator.conversionKeys(pairKeys.getFirst(), pairKeys.getSecond());
-        Keys newKeys = keyGenerator.convertKeys(keys.getKeyConversion(), keys.getPublicKeys(), keys.getPrivateKeys());
-
-        String decryptedMessage = keyGenerator.decrypt(encryptedMessage, newKeys.getPrivateKeys());
     }
 
     /**
@@ -201,19 +195,44 @@ public class RegistrationActivity extends AppCompatActivity {
                         DocumentSnapshot ds = task.getResult();
                         UserEntity userEntity = ds.toObject(UserEntity.class);
 
-                        /**
-                         * Пользователь хочет войти и верно ввел данные
-                         **/
-                        if (
-                                !registration_bool &&
-                                        ds.exists() &&
-                                        editTextNumberPassword
-                                                .getText()
-                                                .toString()
-                                                .trim()
-                                                .equals(userEntity.getPassword())
-                        ) {
-                            runStartActivity();
+                        if (userEntity != null) {
+                            Pair<PublicKeys, PrivateKeys> pairKeys = keyGenerator.generateKeypair(userEntity.getId(), userEntity.getUsername());
+                            String password = keyGenerator.decrypt(
+                                    keyGenerator.stringToListBigInteger(userEntity.getPassword()),
+                                    pairKeys.getSecond()
+                            );
+
+                            /**
+                             * Пользователь хочет войти и верно ввел данные
+                             **/
+                            if (
+                                    !registration_bool &&
+                                            editTextNumberPassword
+                                                    .getText()
+                                                    .toString()
+                                                    .trim()
+                                                    .equals(password)
+                            ) {
+                                runStartActivity();
+                            }
+
+                            /**
+                             * Пользователь хочет войти и неверно ввел данные
+                             **/
+                            if (
+                                    !registration_bool &&
+                                            !editTextNumberPassword
+                                                    .getText()
+                                                    .toString()
+                                                    .trim()
+                                                    .equals(password)
+                            ) {
+                                Toast.makeText(
+                                        RegistrationActivity.this,
+                                        "Неверный логин или пароль",
+                                        Toast.LENGTH_LONG
+                                ).show();
+                            }
                         }
 
                         /**
@@ -221,12 +240,7 @@ public class RegistrationActivity extends AppCompatActivity {
                          **/
                         if (
                                 !registration_bool &&
-                                        (!ds.exists() ||
-                                                !editTextNumberPassword
-                                                        .getText()
-                                                        .toString()
-                                                        .trim()
-                                                        .equals(userEntity.getPassword()))
+                                        !ds.exists()
                         ) {
                             Toast.makeText(
                                     RegistrationActivity.this,
@@ -261,7 +275,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         }
                     }
                 });
-    }
+}
 
     /**
      * Метод отвечает за запуск ChatsActivity и закрытие нынещнего активити
@@ -297,10 +311,20 @@ public class RegistrationActivity extends AppCompatActivity {
      **/
     private void sendRegistration() {
         try {
-            int id = (int) (Math.random() * 10000000);
+            long id = (long) (Math.random() * 1000000000);
             String username = editTextName.getText().toString().trim();
             String password = editTextNumberPassword.getText().toString().trim();
-            UserEntity userEntity = new UserEntity(id, username, password);
+
+            Pair<PublicKeys, PrivateKeys> pairKeys = keyGenerator.generateKeypair(id, username);
+
+            UserEntity userEntity = new UserEntity(
+                    id,
+                    username,
+                    keyGenerator.listBigIntegerToString(
+                            keyGenerator.encrypt(password, pairKeys.getFirst())
+                    )
+            );
+
             db
                     .collection(DataBase.NAME_DB)
                     .document(userEntity.getUsername())

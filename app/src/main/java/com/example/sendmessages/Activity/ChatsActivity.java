@@ -23,6 +23,10 @@ import com.example.sendmessages.Entity.ChatsEntity;
 import com.example.sendmessages.Interface.OnClickListener;
 import com.example.sendmessages.Mapping.ChatsMapper;
 import com.example.sendmessages.R;
+import com.example.sendmessages.Security.KeyGenerator;
+import com.example.sendmessages.Security.Keys;
+import com.example.sendmessages.Security.PrivateKeys;
+import com.example.sendmessages.Security.PublicKeys;
 import com.example.sendmessages.Service.NetworkIsConnectedService;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -30,10 +34,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import kotlin.Pair;
 
 /**
  * Класс отвечает за представление чатов конкретного пользователя
@@ -50,16 +57,19 @@ public class ChatsActivity extends AppCompatActivity {
     private RecyclerViewAdapterChats adapterChats;
     private FirebaseFirestore db;
     private ChatsMapper mapper = new ChatsMapper();
+    private KeyGenerator keyGenerator = new KeyGenerator();
     /**
      * Ключ для сохранения данных при закрытии или свертывании приложения
      **/
     private static final String USERNAME_FROM = "usernameFromChats";
+    private static final String LINE_KEYS = "lineKeys";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chats_layout);
         initialization();
+
         getChats();
     }
 
@@ -209,9 +219,19 @@ public class ChatsActivity extends AppCompatActivity {
                                 if (
                                         ds.toObject(ChatsEntity.class).getTimeMessageToDataBase() != null
                                 ) {
+
+                                    ChatsEntity chatsEntity = ds.toObject(ChatsEntity.class);
+                                    Keys keys = keyGenerator.stringToKeys(chatsEntity.getLineKeys());
+                                    long number = keyGenerator.getNumberFromTwoLogins(usernameFrom, chatsEntity.getUsernameToWhom());
+                                    Keys newKeys = keyGenerator.decryptKeysForDataBase(keys,number);
+                                    Pair<PublicKeys, PrivateKeys> pairKeys = keyGenerator.decryptKeys(newKeys.getKeyConversion(), newKeys.getPublicKeys(), newKeys.getPrivateKeys());
+
                                     ZonedDateTime zonedDateTime =
                                             ZonedDateTime.parse(
-                                                    ds.toObject(ChatsEntity.class).getTimeMessageToDataBase(),
+                                                    keyGenerator.decrypt(
+                                                            keyGenerator.stringToListBigInteger(chatsEntity.getTimeMessageToDataBase()),
+                                                            pairKeys.getSecond()
+                                                    ),
                                                     DateFormat.getFormatFromDataBase()
                                             );
 
@@ -227,12 +247,12 @@ public class ChatsActivity extends AppCompatActivity {
                                     }
 
                                     ChatsDto chatsDto = mapper
-                                            .getEntityToDto(ds.toObject(ChatsEntity.class));
+                                            .getEntityToDto(chatsEntity, pairKeys);
 
                                     chatsList.add(chatsDto);
                                 }
-                                adapterChats.setList(chatsList);
                             }
+                            adapterChats.setList(chatsList);
                         }
                     });
         } catch (Exception e) {

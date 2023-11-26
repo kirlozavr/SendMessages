@@ -102,7 +102,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
                 .setText(message.getMessage());
         holder
                 .timeFrom
-                .setText(message.getDateTimeToMessages());
+                .setText(message.getDateTimeToDataBase());
 
         if(
                 message.getUriImage() != null
@@ -126,7 +126,7 @@ public class RecyclerViewAdapterMessages extends RecyclerView.Adapter<RecyclerVi
                 .setText(message.getMessage());
         holder
                 .timeToWhom
-                .setText(message.getDateTimeToMessages());
+                .setText(message.getDateTimeToDataBase());
         if(
                 message.getUriImage() != null
                 && message.getUriImage().length() != 0

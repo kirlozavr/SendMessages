@@ -72,7 +72,7 @@ public class RecyclerViewAdapterChats
         }
 
         holder.textChatsName.setText(chatsDto.getUsernameToWhom());
-        holder.timeMessage.setText(chatsDto.getTimeMessageToChats());
+        holder.timeMessage.setText(chatsDto.getTimeMessageToDataBase());
         holder.itemView.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
