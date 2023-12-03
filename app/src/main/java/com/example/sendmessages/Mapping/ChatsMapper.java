@@ -29,9 +29,10 @@ public class ChatsMapper implements Mapping<ChatsEntity, ChatsDto> {
             return new ChatsDto(
                     entity.getIdChats(),
                     entity.getUsernameToWhom(),
-                    keyGenerator.decrypt(
-                            keyGenerator.stringToListBigInteger(entity.getLastMessage()), pairKeys.getSecond()
-                    ),
+                    (entity.getLastMessage().length() != 0) ?
+                            keyGenerator.decrypt(
+                                    keyGenerator.stringToListBigInteger(entity.getLastMessage()), pairKeys.getSecond()
+                            ) : "",
                     DateFormat.getFormatToDateAndTime().format(zonedDateTime),
                     entity.getLineKeys()
             );
@@ -39,9 +40,10 @@ public class ChatsMapper implements Mapping<ChatsEntity, ChatsDto> {
             return new ChatsDto(
                     entity.getIdChats(),
                     entity.getUsernameToWhom(),
-                    keyGenerator.decrypt(
-                            keyGenerator.stringToListBigInteger(entity.getLastMessage()), pairKeys.getSecond()
-                    ),
+                    (entity.getLastMessage().length() != 0) ?
+                            keyGenerator.decrypt(
+                                    keyGenerator.stringToListBigInteger(entity.getLastMessage()), pairKeys.getSecond()
+                            ) : "",
                     DateFormat.getFormatToTime().format(zonedDateTime),
                     entity.getLineKeys()
             );

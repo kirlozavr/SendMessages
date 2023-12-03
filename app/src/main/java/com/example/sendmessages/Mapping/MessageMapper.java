@@ -29,9 +29,10 @@ public class MessageMapper implements Mapping<MessageEntity, MessageDto> {
 
         if (isToday) {
             return new MessageDto(
-                    keyGenerator.decrypt(
-                            keyGenerator.stringToListBigInteger(entity.getMessage()), pairKeys.getSecond()
-                    ),
+                    (entity.getMessage().length() != 0) ?
+                            keyGenerator.decrypt(
+                                    keyGenerator.stringToListBigInteger(entity.getMessage()), pairKeys.getSecond()
+                            ) : "",
                     DateFormat.getFormatToDateAndTime().format(zonedDateTime),
                     keyGenerator.decrypt(
                             keyGenerator.stringToListBigInteger(entity.getUsernameFrom()), pairKeys.getSecond()
@@ -43,9 +44,10 @@ public class MessageMapper implements Mapping<MessageEntity, MessageDto> {
             );
         } else {
             return new MessageDto(
-                    keyGenerator.decrypt(
-                            keyGenerator.stringToListBigInteger(entity.getMessage()), pairKeys.getSecond()
-                    ),
+                    (entity.getMessage().length() != 0) ?
+                            keyGenerator.decrypt(
+                                    keyGenerator.stringToListBigInteger(entity.getMessage()), pairKeys.getSecond()
+                            ) : "",
                     DateFormat.getFormatToTime().format(zonedDateTime),
                     keyGenerator.decrypt(
                             keyGenerator.stringToListBigInteger(entity.getUsernameFrom()), pairKeys.getSecond()
