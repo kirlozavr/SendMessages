@@ -8,7 +8,7 @@ public class DataBase {
     /**
      * Название таблицы с пользователями
      **/
-    public static final String NAME_DB = "User";
+    public static final String NAME_DB = "Users";
 
     /**
      * Название таблицы с сообщениями

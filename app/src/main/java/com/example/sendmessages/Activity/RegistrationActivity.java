@@ -197,9 +197,8 @@ public class RegistrationActivity extends AppCompatActivity {
 
                         if (userEntity != null) {
                             Pair<PublicKeys, PrivateKeys> pairKeys = keyGenerator.generateKeypair(userEntity.getId(), userEntity.getUsername());
-                            String password = keyGenerator.decrypt(
-                                    keyGenerator.stringToListBigInteger(userEntity.getPassword()),
-                                    pairKeys.getSecond()
+                            String password = keyGenerator.listBigIntegerPasswordToString(
+                                    keyGenerator.encrypt(editTextNumberPassword.getText().toString().trim(), pairKeys.getFirst())
                             );
 
                             /**
@@ -207,11 +206,7 @@ public class RegistrationActivity extends AppCompatActivity {
                              **/
                             if (
                                     !registration_bool &&
-                                            editTextNumberPassword
-                                                    .getText()
-                                                    .toString()
-                                                    .trim()
-                                                    .equals(password)
+                                            userEntity.getPassword().equals(password)
                             ) {
                                 runStartActivity();
                             }
@@ -221,11 +216,7 @@ public class RegistrationActivity extends AppCompatActivity {
                              **/
                             if (
                                     !registration_bool &&
-                                            !editTextNumberPassword
-                                                    .getText()
-                                                    .toString()
-                                                    .trim()
-                                                    .equals(password)
+                                            !userEntity.getPassword().equals(password)
                             ) {
                                 Toast.makeText(
                                         RegistrationActivity.this,
@@ -275,7 +266,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         }
                     }
                 });
-}
+    }
 
     /**
      * Метод отвечает за запуск ChatsActivity и закрытие нынещнего активити
@@ -320,7 +311,7 @@ public class RegistrationActivity extends AppCompatActivity {
             UserEntity userEntity = new UserEntity(
                     id,
                     username,
-                    keyGenerator.listBigIntegerToString(
+                    keyGenerator.listBigIntegerPasswordToString(
                             keyGenerator.encrypt(password, pairKeys.getFirst())
                     )
             );

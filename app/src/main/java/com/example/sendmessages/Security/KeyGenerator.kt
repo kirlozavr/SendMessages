@@ -31,6 +31,9 @@ class KeyGenerator {
         }
     }
 
+    /**
+     * Метод генерирует ключи
+     */
     fun generateKeypair(): Pair<PublicKeys, PrivateKeys> {
         // Генерация публичного и приватного ключей
         val p = generateLargePrime()
@@ -49,6 +52,9 @@ class KeyGenerator {
         return Pair(PublicKeys(e, n), PrivateKeys(privateKey, n))
     }
 
+    /**
+     * Метод генерирует стабильный ключ исходя из входных данных
+     */
     fun generateKeypair(id: Long, username: String): Pair<PublicKeys, PrivateKeys> {
         // Генерация публичного и приватного ключей
 
@@ -94,6 +100,9 @@ class KeyGenerator {
         return Pair(PublicKeys(e, n), PrivateKeys(privateKey, n))
     }
 
+    /**
+     * Метод зашифровывает сообщение
+     */
     fun encrypt(message: String, publicKey: PublicKeys): List<BigInteger> {
         // Шифрование сообщения с использованием публичного ключа
         return message.map {
@@ -101,6 +110,9 @@ class KeyGenerator {
         }
     }
 
+    /**
+     * Метод расшифровывает сообщение
+     */
     fun decrypt(encryptedMessage: List<BigInteger>, privateKey: PrivateKeys): String {
         // Расшифровка сообщения с использованием приватного ключа
         val decryptedMsg = encryptedMessage.map {
@@ -216,10 +228,23 @@ class KeyGenerator {
         )
     }
 
+    /**
+     * Список зашифрованных значений в строку
+     */
     fun listBigIntegerToString(list: List<BigInteger>): String{
         return list.joinToString("|")
     }
 
+    /**
+     * Список зашифрованных значений пароля в строку
+     */
+    fun listBigIntegerPasswordToString(list: List<BigInteger>): String{
+        return list.joinToString("")
+    }
+
+    /**
+     * Строку в список зашифрованных значений
+     */
     fun stringToListBigInteger(value: String): List<BigInteger>{
         return value.split("|").map { it.toBigInteger() }
     }

@@ -10,6 +10,7 @@ import com.example.sendmessages.DTO.ChatsDto
 import com.example.sendmessages.DTO.MessageDto
 import com.example.sendmessages.Entity.ChatsEntity
 import com.example.sendmessages.Entity.MessageEntity
+import com.example.sendmessages.Interface.Mapping
 import com.example.sendmessages.Mapping.ChatsMapper
 import com.example.sendmessages.Mapping.MessageMapper
 import com.example.sendmessages.Security.KeyGenerator
@@ -99,9 +100,9 @@ class MessageService() {
         if ((isExistText
                 || uriImage != null)) {
             messageDto = MessageDto(
+                editText!!.text.toString().trim { it <= ' ' },
                 DateFormat.getFormatToDataBase().format(ZonedDateTime.now()),
                 (usernameFrom)!!,
-                editText!!.text.toString().trim { it <= ' ' },
                 null
             )
             if (uriImage != null) {
@@ -172,35 +173,35 @@ class MessageService() {
         boolChatExist = false
     }
 
-    fun getChat(){
+    fun getChat() {
         /**
          * Метод отвечает за получение чата с конкретным пользователем из БД,
          * если его еще нет, то создается новый.
          * Так же выводит все сообщения между пользователями.
          */
-            db
-                .collection(DataBase.CHATS_DB)
-                .document((usernameFrom)!!)
-                .collection(DataBase.ListTag.COLLECTIONS_CHATS_TAG)
-                .document((usernameToWhom)!!)
-                .get()
-                .addOnSuccessListener { documentSnapshot ->
-                    if (documentSnapshot.exists()) {
-                        val chatsEntityFrom = documentSnapshot
-                            .toObject(ChatsEntity::class.java)
+        db
+            .collection(DataBase.CHATS_DB)
+            .document((usernameFrom)!!)
+            .collection(DataBase.ListTag.COLLECTIONS_CHATS_TAG)
+            .document((usernameToWhom)!!)
+            .get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val chatsEntityFrom = documentSnapshot
+                        .toObject(ChatsEntity::class.java)
 
-                        val keys: Keys = keyGenerator.stringToKeys(chatsEntityFrom!!.lineKeys)
-                        val number = keyGenerator.getNumberFromTwoLogins(usernameFrom!!, chatsEntityFrom.usernameToWhom)
-                        val (keyConversion, publicKeys, privateKeys) = keyGenerator.decryptKeysForDataBase(keys, number)
-                        pairKeys = keyGenerator.decryptKeys(keyConversion, publicKeys, privateKeys)
+                    val keys: Keys = keyGenerator.stringToKeys(chatsEntityFrom!!.lineKeys)
+                    val number = keyGenerator.getNumberFromTwoLogins(usernameFrom!!, chatsEntityFrom.usernameToWhom)
+                    val (keyConversion, publicKeys, privateKeys) = keyGenerator.decryptKeysForDataBase(keys, number)
+                    pairKeys = keyGenerator.decryptKeys(keyConversion, publicKeys, privateKeys)
 
-                        chatsDtoFrom = chatsEntityFrom.let { chatsMapper.getEntityToDto(it, pairKeys) }
-                        boolChatExist = true
-                    } else {
-                        setChatsEntity()
-                    }
-                    messagesFromDataBase
+                    chatsDtoFrom = chatsEntityFrom.let { chatsMapper.getEntityToDto(it, pairKeys) }
+                    boolChatExist = true
+                } else {
+                    setChatsEntity()
                 }
+                messagesFromDataBase
+            }
     }
 
     /**
@@ -208,14 +209,22 @@ class MessageService() {
      * Последнее сообщение, время отправки сообщения.
      */
     private fun updateChats() {
+        val message = keyGenerator.listBigIntegerToString(
+            keyGenerator.encrypt(messageDto!!.message, pairKeys!!.first)
+        )
+        val dateTimeToDataBase = keyGenerator.listBigIntegerToString(
+            keyGenerator.encrypt(messageDto!!.dateTimeToDataBase, pairKeys!!.first)
+        )
+
+
         db
             .collection(DataBase.CHATS_DB)
             .document((usernameFrom)!!)
             .collection(DataBase.ListTag.COLLECTIONS_CHATS_TAG)
             .document((usernameToWhom)!!)
             .update(
-                "lastMessage", messageDto!!.message,
-                "timeMessageToDataBase", messageDto!!.dateTimeToDataBase
+                "lastMessage", message,
+                "timeMessageToDataBase", dateTimeToDataBase
             )
         db
             .collection(DataBase.CHATS_DB)
@@ -223,8 +232,8 @@ class MessageService() {
             .collection(DataBase.ListTag.COLLECTIONS_CHATS_TAG)
             .document((usernameFrom)!!)
             .update(
-                "lastMessage", messageDto!!.message,
-                "timeMessageToDataBase", messageDto!!.dateTimeToDataBase
+                "lastMessage", message,
+                "timeMessageToDataBase", dateTimeToDataBase
             )
         boolChatExist = true
     }
@@ -272,8 +281,8 @@ class MessageService() {
                                  */
                                 if (
                                     ds.toObject<MessageEntity>(MessageEntity::class.java)
-                                    ?.dateTimeToDataBase != null
-                                    ) {
+                                        ?.dateTimeToDataBase != null
+                                ) {
 
                                     val messageEntity = ds.toObject(MessageEntity::class.java)!!
 
