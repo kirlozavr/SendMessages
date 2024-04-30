@@ -2,6 +2,7 @@ package com.example.sendmessages.Security
 
 import android.util.Log
 import java.math.BigInteger
+import java.security.SecureRandom
 import java.util.Random
 
 class KeyGenerator {
@@ -63,7 +64,7 @@ class KeyGenerator {
 
         var p: BigInteger
         while (true){
-            val preP = getNumberFromTwoLogins(username.repeat(8) + id, "password".repeat(6)) + count
+            val preP = getNumberFromTwoLogins(username.repeat(8) + id, "FNJ#J!N2*SFN#N".repeat(6)) + count
             p = BigInteger(512, Random(preP))
             count += 1
             if (p.isProbablePrime(10)) {
@@ -74,7 +75,7 @@ class KeyGenerator {
         count = 0L
         var q: BigInteger
         while (true){
-            val preQ = getNumberFromTwoLogins(username.repeat(24) + id, "password".repeat(4) ) + count
+            val preQ = getNumberFromTwoLogins(username.repeat(24) + id, "=BSFUIA(#)$)(%@#DJNJ".repeat(7) ) + count
             q = BigInteger(512, Random(preQ))
             count += 1
             if (q.isProbablePrime(10)) {
@@ -88,7 +89,7 @@ class KeyGenerator {
         count = 0
         var e: BigInteger
         while (true){
-            val preE = getNumberFromTwoLogins(username.repeat(36) + id + phi.bitLength(), "password".repeat(2) ) + count
+            val preE = getNumberFromTwoLogins(username.repeat(36) + id + phi.bitLength(), "UH6WFUNX_$@XRMJ#@".repeat(3) ) + count
             e = BigInteger(512, Random(preE))
             count += 1
             if (e > BigInteger.valueOf(2) && e < phi && gcd(e, phi) == BigInteger.ONE) {
