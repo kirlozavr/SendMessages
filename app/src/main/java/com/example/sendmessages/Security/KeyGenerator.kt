@@ -89,7 +89,7 @@ class KeyGenerator {
         count = 0
         var e: BigInteger
         while (true){
-            val preE = getNumberFromTwoLogins(username.repeat(36) + id + phi.bitLength(), "UH6WFUNX_$@XRMJ#@".repeat(3) ) + count
+            val preE = getNumberFromTwoLogins(username.repeat(36) + id + phi.toByteArray(), "UH6WFUNX_$@XRMJ#@".repeat(3) ) + count
             e = BigInteger(512, Random(preE))
             count += 1
             if (e > BigInteger.valueOf(2) && e < phi && gcd(e, phi) == BigInteger.ONE) {
