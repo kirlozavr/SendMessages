@@ -1,5 +1,6 @@
 package com.example.sendmessages.Security
 
+import android.util.Log
 import java.math.BigInteger
 import java.util.Random
 
@@ -58,23 +59,23 @@ class KeyGenerator {
     fun generateKeypair(id: Long, username: String): Pair<PublicKeys, PrivateKeys> {
         // Генерация публичного и приватного ключей
 
-        var count = 0
+        var count = 0L
 
         var p: BigInteger
         while (true){
             val preP = getNumberFromTwoLogins(username.repeat(8) + id, "password".repeat(6)) + count
-            p = BigInteger.valueOf(preP)
+            p = BigInteger(512, Random(preP))
             count += 1
             if (p.isProbablePrime(10)) {
                 break
             }
         }
 
-        count = 0
+        count = 0L
         var q: BigInteger
         while (true){
             val preQ = getNumberFromTwoLogins(username.repeat(24) + id, "password".repeat(4) ) + count
-            q = BigInteger.valueOf(preQ)
+            q = BigInteger(512, Random(preQ))
             count += 1
             if (q.isProbablePrime(10)) {
                 break
@@ -88,7 +89,7 @@ class KeyGenerator {
         var e: BigInteger
         while (true){
             val preE = getNumberFromTwoLogins(username.repeat(36) + id + phi.bitLength(), "password".repeat(2) ) + count
-            e = BigInteger.valueOf(preE)
+            e = BigInteger(512, Random(preE))
             count += 1
             if (e > BigInteger.valueOf(2) && e < phi && gcd(e, phi) == BigInteger.ONE) {
                 break
