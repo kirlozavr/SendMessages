@@ -22,7 +22,10 @@ class KeyGenerator {
         return if (b == BigInteger.ZERO) a else gcd(b, a % b)
     }
 
-    private fun extendedGcd(a: BigInteger, b: BigInteger): Triple<BigInteger, BigInteger, BigInteger> {
+    private fun extendedGcd(
+        a: BigInteger,
+        b: BigInteger
+    ): Triple<BigInteger, BigInteger, BigInteger> {
         // Расширенный алгоритм Евклида
         return if (a == BigInteger.ZERO) Triple(b, BigInteger.ZERO, BigInteger.ONE)
         else {
@@ -63,8 +66,12 @@ class KeyGenerator {
         var count = 0L
 
         var p: BigInteger
-        while (true){
-            val preP = getNumberFromTwoLogins(username.repeat(8) + id, "FNJ#J!N2*SFN#N".repeat(6)) + count
+        while (true) {
+            val preP = getNumberFromTwoValues(
+                username.repeat(8) + id,
+                "FNJ#J!N2*SFN#N".repeat(6)
+            ) + count
+
             p = BigInteger(512, Random(preP))
             count += 1
             if (p.isProbablePrime(10)) {
@@ -74,8 +81,12 @@ class KeyGenerator {
 
         count = 0L
         var q: BigInteger
-        while (true){
-            val preQ = getNumberFromTwoLogins(username.repeat(24) + id, "=BSFUIA(#)$)(%@#DJNJ".repeat(7) ) + count
+        while (true) {
+            val preQ = getNumberFromTwoValues(
+                username.repeat(24) + id,
+                "=BSFUIA(#)$)(%@#DJNJ".repeat(7)
+            ) + count
+
             q = BigInteger(512, Random(preQ))
             count += 1
             if (q.isProbablePrime(10)) {
@@ -88,8 +99,12 @@ class KeyGenerator {
 
         count = 0
         var e: BigInteger
-        while (true){
-            val preE = getNumberFromTwoLogins(username.repeat(36) + id + phi.toByteArray(), "UH6WFUNX_$@XRMJ#@".repeat(3) ) + count
+        while (true) {
+            val preE = getNumberFromTwoValues(
+                username.repeat(36) + id + phi.toByteArray(),
+                "UH6WFUNX_$@XRMJ#@".repeat(3)
+            ) + count
+
             e = BigInteger(512, Random(preE))
             count += 1
             if (e > BigInteger.valueOf(2) && e < phi && gcd(e, phi) == BigInteger.ONE) {
@@ -108,7 +123,8 @@ class KeyGenerator {
     fun encrypt(message: String, publicKey: PublicKeys): List<BigInteger> {
         // Шифрование сообщения с использованием публичного ключа
         return message.map {
-            BigInteger.valueOf(it.toLong()).modPow(publicKey.firstPublicKey, publicKey.secondPublicKey)
+            BigInteger.valueOf(it.toLong())
+                .modPow(publicKey.firstPublicKey, publicKey.secondPublicKey)
         }
     }
 
@@ -152,7 +168,11 @@ class KeyGenerator {
     /**
      * Расшифровывает ключи
      */
-    fun decryptKeys(keyConversion: KeyConversion, publicKey: PublicKeys, privateKey: PrivateKeys): Pair<PublicKeys, PrivateKeys> {
+    fun decryptKeys(
+        keyConversion: KeyConversion,
+        publicKey: PublicKeys,
+        privateKey: PrivateKeys
+    ): Pair<PublicKeys, PrivateKeys> {
         val newPublicKeys = PublicKeys(
             firstPublicKey = publicKey.firstPublicKey.divide(BigInteger.valueOf(keyConversion.publicFirstKey)),
             secondPublicKey = publicKey.secondPublicKey.divide(BigInteger.valueOf(keyConversion.publicSecondKey))
@@ -168,10 +188,22 @@ class KeyGenerator {
     /**
      * Метод дополнительно шифрует все ключи
      */
-    fun encryptKeysForDataBase(keys: Keys, number: Long): Keys{
+    fun encryptKeysForDataBase(keys: Keys, number: Long): Keys {
         return Keys(
-            publicKeys = PublicKeys(keys.publicKeys.firstPublicKey.multiply(BigInteger.valueOf(number)), keys.publicKeys.secondPublicKey.multiply(BigInteger.valueOf(number))),
-            privateKeys = PrivateKeys(keys.privateKeys.firstPrivateKey.multiply(BigInteger.valueOf(number)), keys.privateKeys.secondPrivateKey.multiply(BigInteger.valueOf(number))),
+            publicKeys = PublicKeys(
+                keys.publicKeys.firstPublicKey.multiply(
+                    BigInteger.valueOf(
+                        number
+                    )
+                ), keys.publicKeys.secondPublicKey.multiply(BigInteger.valueOf(number))
+            ),
+            privateKeys = PrivateKeys(
+                keys.privateKeys.firstPrivateKey.multiply(
+                    BigInteger.valueOf(
+                        number
+                    )
+                ), keys.privateKeys.secondPrivateKey.multiply(BigInteger.valueOf(number))
+            ),
             keyConversion = KeyConversion(
                 publicFirstKey = keys.keyConversion.publicFirstKey * number,
                 publicSecondKey = keys.keyConversion.publicSecondKey * number,
@@ -184,10 +216,19 @@ class KeyGenerator {
     /**
      * Метод расшифровывает все ключи
      */
-    fun decryptKeysForDataBase(keys: Keys, number: Long): Keys{
+    fun decryptKeysForDataBase(keys: Keys, number: Long): Keys {
         return Keys(
-            publicKeys = PublicKeys(keys.publicKeys.firstPublicKey.divide(BigInteger.valueOf(number)), keys.publicKeys.secondPublicKey.divide(BigInteger.valueOf(number))),
-            privateKeys = PrivateKeys(keys.privateKeys.firstPrivateKey.divide(BigInteger.valueOf(number)), keys.privateKeys.secondPrivateKey.divide(BigInteger.valueOf(number))),
+            publicKeys = PublicKeys(
+                keys.publicKeys.firstPublicKey.divide(BigInteger.valueOf(number)),
+                keys.publicKeys.secondPublicKey.divide(BigInteger.valueOf(number))
+            ),
+            privateKeys = PrivateKeys(
+                keys.privateKeys.firstPrivateKey.divide(
+                    BigInteger.valueOf(
+                        number
+                    )
+                ), keys.privateKeys.secondPrivateKey.divide(BigInteger.valueOf(number))
+            ),
             keyConversion = KeyConversion(
                 publicFirstKey = keys.keyConversion.publicFirstKey / number,
                 publicSecondKey = keys.keyConversion.publicSecondKey / number,
@@ -200,14 +241,25 @@ class KeyGenerator {
     /**
      * Метод разбивает логины на массив символов и складывает их
      */
-    fun getNumberFromTwoLogins(firstName: String, secondName: String): Long{
-        return (firstName.toCharArray().sumOf { it.code } + secondName.toCharArray().sumOf { it.code }).toLong()
+    private fun getNumberFromTwoValues(firstValue: String, secondValue: String): Long {
+        return (firstValue.toCharArray().sumOf { it.code }
+            + secondValue.toCharArray().sumOf { it.code }).toLong()
+    }
+
+    /**
+     * Метод разбивает логины на массив символов и складывает их
+     */
+    fun getNumberFromTwoLogins(firstName: String, secondName: String): Long {
+        return (firstName.toCharArray().sumOf { it.code }
+            + secondName.toCharArray().sumOf { it.code }
+            + "0-DJSCM#*#CGT@IBUHUIG##&T@^BJHO@(._@+++++CM@C$@Y/C&@Y&-CG@^@GCG@GC&@(C*HCKUGY#&#G#GCBU#Y^@*Y)*C@UV}G$".toCharArray().sumOf { it.code }
+            ).toLong()
     }
 
     /**
      * Метод переводит keys в строку
      */
-    fun keysToString(keys: Keys): String{
+    fun keysToString(keys: Keys): String {
         return keys.publicKeys.firstPublicKey.toString() + "|" +
             keys.publicKeys.secondPublicKey.toString() + "|" +
             keys.privateKeys.firstPrivateKey.toString() + "|" +
@@ -221,33 +273,38 @@ class KeyGenerator {
     /**
      * Метод переводит строку в keys
      */
-    fun stringToKeys(stringKeys: String): Keys{
+    fun stringToKeys(stringKeys: String): Keys {
         val listKeys = stringKeys.split("|")
         return Keys(
             publicKeys = PublicKeys(listKeys[0].toBigInteger(), listKeys[1].toBigInteger()),
             privateKeys = PrivateKeys(listKeys[2].toBigInteger(), listKeys[3].toBigInteger()),
-            keyConversion = KeyConversion(listKeys[4].toLong(), listKeys[5].toLong(), listKeys[6].toLong(), listKeys[7].toLong())
+            keyConversion = KeyConversion(
+                listKeys[4].toLong(),
+                listKeys[5].toLong(),
+                listKeys[6].toLong(),
+                listKeys[7].toLong()
+            )
         )
     }
 
     /**
      * Список зашифрованных значений в строку
      */
-    fun listBigIntegerToString(list: List<BigInteger>): String{
+    fun listBigIntegerToString(list: List<BigInteger>): String {
         return list.joinToString("|")
     }
 
     /**
      * Список зашифрованных значений пароля в строку
      */
-    fun listBigIntegerPasswordToString(list: List<BigInteger>): String{
+    fun listBigIntegerPasswordToString(list: List<BigInteger>): String {
         return list.joinToString("")
     }
 
     /**
      * Строку в список зашифрованных значений
      */
-    fun stringToListBigInteger(value: String): List<BigInteger>{
+    fun stringToListBigInteger(value: String): List<BigInteger> {
         return value.split("|").map { it.toBigInteger() }
     }
 }
