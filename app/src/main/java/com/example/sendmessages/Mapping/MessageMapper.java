@@ -21,7 +21,7 @@ public class MessageMapper implements Mapping<MessageEntity, MessageDto> {
     public MessageDto getEntityToDto(@NonNull MessageEntity entity, Pair<PublicKeys, PrivateKeys> pairKeys) {
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(
                 keyGenerator.decrypt(
-                        keyGenerator.stringToListBigInteger(entity.getDateTimeToDataBase()),
+                        keyGenerator.stringToListBigInteger(entity.getTimeMessage()),
                         pairKeys.getSecond()
                 ),
                 DateFormat.getFormatFromDataBase()
@@ -37,9 +37,9 @@ public class MessageMapper implements Mapping<MessageEntity, MessageDto> {
                     keyGenerator.decrypt(
                             keyGenerator.stringToListBigInteger(entity.getUsernameFrom()), pairKeys.getSecond()
                     ),
-                    (entity.getUriImage() != null) ?
+                    (entity.getUrlImage() != null) ?
                             keyGenerator.decrypt(
-                                    keyGenerator.stringToListBigInteger(entity.getUriImage()), pairKeys.getSecond()
+                                    keyGenerator.stringToListBigInteger(entity.getUrlImage()), pairKeys.getSecond()
                             ) : null
             );
         } else {
@@ -52,9 +52,9 @@ public class MessageMapper implements Mapping<MessageEntity, MessageDto> {
                     keyGenerator.decrypt(
                             keyGenerator.stringToListBigInteger(entity.getUsernameFrom()), pairKeys.getSecond()
                     ),
-                    (entity.getUriImage() != null) ?
+                    (entity.getUrlImage() != null) ?
                             keyGenerator.decrypt(
-                                    keyGenerator.stringToListBigInteger(entity.getUriImage()), pairKeys.getSecond()
+                                    keyGenerator.stringToListBigInteger(entity.getUrlImage()), pairKeys.getSecond()
                             ) : null
             );
         }

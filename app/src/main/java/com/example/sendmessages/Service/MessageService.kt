@@ -224,7 +224,7 @@ class MessageService() {
             .document((usernameToWhom)!!)
             .update(
                 "lastMessage", message,
-                "timeMessageToDataBase", dateTimeToDataBase
+                "timeMessage", dateTimeToDataBase
             )
         db
             .collection(DataBase.CHATS_DB)
@@ -233,7 +233,7 @@ class MessageService() {
             .document((usernameFrom)!!)
             .update(
                 "lastMessage", message,
-                "timeMessageToDataBase", dateTimeToDataBase
+                "timeMessage", dateTimeToDataBase
             )
         boolChatExist = true
     }
@@ -281,14 +281,14 @@ class MessageService() {
                                  */
                                 if (
                                     ds.toObject<MessageEntity>(MessageEntity::class.java)
-                                        ?.dateTimeToDataBase != null
+                                        ?.timeMessage != null
                                 ) {
 
                                     val messageEntity = ds.toObject(MessageEntity::class.java)!!
 
                                     val zonedDateTime = ZonedDateTime.parse(
                                         keyGenerator.decrypt(
-                                            keyGenerator.stringToListBigInteger(messageEntity.dateTimeToDataBase),
+                                            keyGenerator.stringToListBigInteger(messageEntity.timeMessage),
                                             pairKeys!!.second
                                         ),
                                         DateFormat.getFormatFromDataBase()

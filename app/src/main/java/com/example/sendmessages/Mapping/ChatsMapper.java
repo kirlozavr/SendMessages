@@ -21,13 +21,13 @@ public class ChatsMapper implements Mapping<ChatsEntity, ChatsDto> {
     public ChatsDto getEntityToDto(@NonNull ChatsEntity entity, Pair<PublicKeys, PrivateKeys> pairKeys) {
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(
                 keyGenerator.decrypt(
-                        keyGenerator.stringToListBigInteger(entity.getTimeMessageToDataBase()), pairKeys.getSecond()
+                        keyGenerator.stringToListBigInteger(entity.getTimeMessage()), pairKeys.getSecond()
                 ),
                 DateFormat.getFormatFromDataBase()
         );
         if (isToday) {
             return new ChatsDto(
-                    entity.getIdChats(),
+                    entity.getChatId(),
                     entity.getUsernameToWhom(),
                     (entity.getLastMessage().length() != 0) ?
                             keyGenerator.decrypt(
@@ -38,7 +38,7 @@ public class ChatsMapper implements Mapping<ChatsEntity, ChatsDto> {
             );
         } else {
             return new ChatsDto(
-                    entity.getIdChats(),
+                    entity.getChatId(),
                     entity.getUsernameToWhom(),
                     (entity.getLastMessage().length() != 0) ?
                             keyGenerator.decrypt(

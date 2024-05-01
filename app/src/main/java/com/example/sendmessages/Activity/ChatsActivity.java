@@ -217,7 +217,7 @@ public class ChatsActivity extends AppCompatActivity {
                                  * то не загружает эти данные в маппер.
                                  **/
                                 if (
-                                        ds.toObject(ChatsEntity.class).getTimeMessageToDataBase() != null
+                                        ds.toObject(ChatsEntity.class).getTimeMessage() != null && !ds.toObject(ChatsEntity.class).getTimeMessage().isEmpty()
                                 ) {
 
                                     ChatsEntity chatsEntity = ds.toObject(ChatsEntity.class);
@@ -229,7 +229,7 @@ public class ChatsActivity extends AppCompatActivity {
                                     ZonedDateTime zonedDateTime =
                                             ZonedDateTime.parse(
                                                     keyGenerator.decrypt(
-                                                            keyGenerator.stringToListBigInteger(chatsEntity.getTimeMessageToDataBase()),
+                                                            keyGenerator.stringToListBigInteger(chatsEntity.getTimeMessage()),
                                                             pairKeys.getSecond()
                                                     ),
                                                     DateFormat.getFormatFromDataBase()

@@ -196,7 +196,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         UserEntity userEntity = ds.toObject(UserEntity.class);
 
                         if (userEntity != null) {
-                            Pair<PublicKeys, PrivateKeys> pairKeys = keyGenerator.generateKeypair(userEntity.getId(), userEntity.getUsername());
+                            Pair<PublicKeys, PrivateKeys> pairKeys = keyGenerator.generateKeypair(userEntity.getUserId(), userEntity.getUsername());
                             String password = keyGenerator.listBigIntegerPasswordToString(
                                     keyGenerator.encrypt(editTextNumberPassword.getText().toString().trim(), pairKeys.getFirst())
                             );

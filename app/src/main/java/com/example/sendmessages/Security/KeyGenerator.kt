@@ -1,8 +1,6 @@
 package com.example.sendmessages.Security
 
-import android.util.Log
 import java.math.BigInteger
-import java.security.SecureRandom
 import java.util.Random
 
 class KeyGenerator {
@@ -72,7 +70,9 @@ class KeyGenerator {
                 "FNJ#J!N2*SFN#N".repeat(6)
             ) + count
 
-            p = BigInteger(512, Random(preP))
+            p = BigInteger.valueOf(preP)
+                .add(BigInteger.valueOf(352351))
+                .setBit(512)
             count += 1
             if (p.isProbablePrime(10)) {
                 break
@@ -87,7 +87,9 @@ class KeyGenerator {
                 "=BSFUIA(#)$)(%@#DJNJ".repeat(7)
             ) + count
 
-            q = BigInteger(512, Random(preQ))
+            q = BigInteger.valueOf(preQ)
+                .add(BigInteger.valueOf(892487))
+                .setBit(512)
             count += 1
             if (q.isProbablePrime(10)) {
                 break
@@ -101,11 +103,13 @@ class KeyGenerator {
         var e: BigInteger
         while (true) {
             val preE = getNumberFromTwoValues(
-                username.repeat(36) + id + phi.toByteArray(),
+                username.repeat(36) + id + phi.toByteArray().contentToString(),
                 "UH6WFUNX_$@XRMJ#@".repeat(3)
             ) + count
 
-            e = BigInteger(512, Random(preE))
+            e = BigInteger.valueOf(preE)
+                .add(BigInteger.valueOf(322761))
+                .setBit(512)
             count += 1
             if (e > BigInteger.valueOf(2) && e < phi && gcd(e, phi) == BigInteger.ONE) {
                 break
