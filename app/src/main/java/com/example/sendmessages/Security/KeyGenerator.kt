@@ -65,10 +65,7 @@ class KeyGenerator {
 
         var p: BigInteger
         while (true) {
-            val preP = getNumberFromTwoValues(
-                username.repeat(8) + id,
-                "FNJ#J!N2*SFN#N".repeat(6)
-            ) + count
+            val preP = getNumberFromTwoValues(username.repeat(8) + id, "FNJ#J!N2*SFN#N".repeat(6)) + count
 
             p = BigInteger.valueOf(preP)
                 .add(BigInteger.valueOf(352351))
@@ -82,10 +79,7 @@ class KeyGenerator {
         count = 0L
         var q: BigInteger
         while (true) {
-            val preQ = getNumberFromTwoValues(
-                username.repeat(24) + id,
-                "=BSFUIA(#)$)(%@#DJNJ".repeat(7)
-            ) + count
+            val preQ = getNumberFromTwoValues(username.repeat(24) + id, "=BSFUIA(#)$)(%@#DJNJ".repeat(7)) + count
 
             q = BigInteger.valueOf(preQ)
                 .add(BigInteger.valueOf(892487))
@@ -102,10 +96,7 @@ class KeyGenerator {
         count = 0
         var e: BigInteger
         while (true) {
-            val preE = getNumberFromTwoValues(
-                username.repeat(36) + id + phi.toByteArray().contentToString(),
-                "UH6WFUNX_$@XRMJ#@".repeat(3)
-            ) + count
+            val preE = getNumberFromTwoValues(username.repeat(36) + id + phi.toByteArray().contentToString(), "UH6WFUNX_$@XRMJ#@".repeat(3)) + count
 
             e = BigInteger.valueOf(preE)
                 .add(BigInteger.valueOf(322761))
