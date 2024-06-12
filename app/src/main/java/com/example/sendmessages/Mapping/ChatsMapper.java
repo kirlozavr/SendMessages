@@ -20,9 +20,7 @@ public class ChatsMapper implements Mapping<ChatsEntity, ChatsDto> {
     @Override
     public ChatsDto getEntityToDto(@NonNull ChatsEntity entity, Pair<PublicKeys, PrivateKeys> pairKeys) {
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(
-                keyGenerator.decrypt(
-                        keyGenerator.stringToListBigInteger(entity.getTimeMessage()), pairKeys.getSecond()
-                ),
+                keyGenerator.decrypt(keyGenerator.stringToListBigInteger(entity.getTimeMessage()), pairKeys.getSecond()),
                 DateFormat.getFormatFromDataBase()
         );
         if (isToday) {
@@ -30,9 +28,7 @@ public class ChatsMapper implements Mapping<ChatsEntity, ChatsDto> {
                     entity.getChatId(),
                     entity.getUsernameToWhom(),
                     (entity.getLastMessage().length() != 0) ?
-                            keyGenerator.decrypt(
-                                    keyGenerator.stringToListBigInteger(entity.getLastMessage()), pairKeys.getSecond()
-                            ) : "",
+                            keyGenerator.decrypt(keyGenerator.stringToListBigInteger(entity.getLastMessage()), pairKeys.getSecond()) : "",
                     DateFormat.getFormatToDateAndTime().format(zonedDateTime),
                     entity.getLineKeys()
             );
@@ -41,9 +37,7 @@ public class ChatsMapper implements Mapping<ChatsEntity, ChatsDto> {
                     entity.getChatId(),
                     entity.getUsernameToWhom(),
                     (entity.getLastMessage().length() != 0) ?
-                            keyGenerator.decrypt(
-                                    keyGenerator.stringToListBigInteger(entity.getLastMessage()), pairKeys.getSecond()
-                            ) : "",
+                            keyGenerator.decrypt(keyGenerator.stringToListBigInteger(entity.getLastMessage()), pairKeys.getSecond()) : "",
                     DateFormat.getFormatToTime().format(zonedDateTime),
                     entity.getLineKeys()
             );
@@ -55,12 +49,8 @@ public class ChatsMapper implements Mapping<ChatsEntity, ChatsDto> {
         return new ChatsEntity(
                 dto.getIdChats(),
                 dto.getUsernameToWhom(),
-                keyGenerator.listBigIntegerToString(
-                        keyGenerator.encrypt(dto.getLastMessage(), pairKeys.getFirst())
-                ),
-                keyGenerator.listBigIntegerToString(
-                        keyGenerator.encrypt(dto.getTimeMessageToDataBase(), pairKeys.getFirst())
-                ),
+                keyGenerator.listBigIntegerToString(keyGenerator.encrypt(dto.getLastMessage(), pairKeys.getFirst())),
+                keyGenerator.listBigIntegerToString(keyGenerator.encrypt(dto.getTimeMessageToDataBase(), pairKeys.getFirst())),
                 dto.getLineKeys()
         );
     }
